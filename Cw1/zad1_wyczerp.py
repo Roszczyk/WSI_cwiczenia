@@ -1,4 +1,6 @@
 import numpy as np
+import time
+start = time.time()
 
 w = np.array([8, 3, 5, 2]) #waga przedmiotów
 W = 9 #maksymalna waga plecaka
@@ -25,3 +27,7 @@ for i in range(len(optionP)):
         best_option = i
 
 print(f"option {bin(best_option).lstrip('0b').zfill(4)} with score {best_score}")
+
+end = time.time()
+total = end - start
+print("{0:02f}s".format(total))
