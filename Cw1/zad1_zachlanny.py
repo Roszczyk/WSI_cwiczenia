@@ -25,8 +25,6 @@ for j in range(len(ppw)):
     ppw[best_thing]=0
     best_ppw=0
 
-print(sorted_items)
-
 currentP=0
 currentW=0
 solution=[0,0,0,0]
