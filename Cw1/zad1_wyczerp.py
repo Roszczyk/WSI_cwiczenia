@@ -24,9 +24,9 @@ best_score=0
 for i in range(len(optionP)):
     if optionP[i] > best_score:
         best_score = optionP[i]
-        best_option = i
+        best_option = bin(i).lstrip('0b').zfill(w.size)
 
-print(f"option {bin(best_option).lstrip('0b').zfill(w.size)} with score {best_score}")
+print(f"option {best_option} with score {best_score}")
 
 end = time.time()
 total = end - start
