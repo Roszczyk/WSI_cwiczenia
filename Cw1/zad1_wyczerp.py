@@ -26,7 +26,7 @@ for i in range(len(optionP)):
         best_score = optionP[i]
         best_option = i
 
-print(f"option {bin(best_option).lstrip('0b').zfill(4)} with score {best_score}")
+print(f"option {bin(best_option).lstrip('0b').zfill(w.size)} with score {best_score}")
 
 end = time.time()
 total = end - start
