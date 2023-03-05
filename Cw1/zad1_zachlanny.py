@@ -36,7 +36,7 @@ for i in range(len(sorted_items)):
     else:
         break
 
-print(f"option {solution} with score {currentW}")
+print(f"option {solution} with score {currentP}")
 
 end = time.time()
 total = end - start
