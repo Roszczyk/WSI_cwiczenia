@@ -30,10 +30,11 @@ def checkCurrent(current):
             best_ppw=0
         restW=W-currentW
         count=0
-        while(restW>0 or count<=len(sorted_items)):
+        while(restW>0):
             restW=restW-w.item(sorted_items[count])
             possibleP=possibleP+p.item(sorted_items[count])
-            count=count+1
+            if(restW>0):
+                count=count+1
         possibleP=possibleP-((0-restW)/w.item(sorted_items[count]))*p.item(sorted_items[count])
     return possibleP
 
