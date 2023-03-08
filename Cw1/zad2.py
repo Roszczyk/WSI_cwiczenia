@@ -3,7 +3,7 @@ import numpy as np
 w = np.array([8, 3, 5, 2]) #waga przedmiotów
 W = 9 #maksymalna waga plecaka
 p = np.array([16, 8, 9, 6]) #wartość przedmiotów
-ppw=p/w 
+ppw=p/w
 
 def checkCurrent(current):
     currentP=0
@@ -17,27 +17,31 @@ def checkCurrent(current):
             currentP=0
             break
     if(currentW<W):
+        ppw_temp=np.array(ppw.tolist())
         rest=w.size-len(current)
         sorted_items=[]
         best_ppw=0
         for j in range(rest):
             for i in range(rest):
-                if (ppw.item(w.size-rest+i) > best_ppw):
-                    best_ppw = ppw.item(w.size-rest+i)
+                if (ppw_temp.item(w.size-rest+i) > best_ppw):
+                    best_ppw = ppw_temp.item(w.size-rest+i)
                     best_thing=w.size-rest+i
             sorted_items.append(best_thing)
-            ppw[best_thing]=0
+            ppw_temp[best_thing]=0
             best_ppw=0
         restW=W-currentW
         count=0
-        while(restW>0):
+        iteration=0
+        while(restW>0 and iteration<len(sorted_items)):
+            iteration=iteration+1
             restW=restW-w.item(sorted_items[count])
             possibleP=possibleP+p.item(sorted_items[count])
-            if(restW>0):
+            if(restW>0 and count+1<len(sorted_items)):
                 count=count+1
-        possibleP=possibleP-((0-restW)/w.item(sorted_items[count]))*p.item(sorted_items[count])
+        if(restW<0):
+            possibleP=possibleP-((0-restW)/w.item(sorted_items[count]))*p.item(sorted_items[count])
     return possibleP
 
-print(checkCurrent([0,1]))
+print(checkCurrent())
     
     
