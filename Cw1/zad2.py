@@ -40,7 +40,7 @@ def checkCurrent(current):
                 count=count+1
         if(restW<0):
             possibleP=possibleP-((0-restW)/w.item(sorted_items[count]))*p.item(sorted_items[count])
-    return possibleP
+    return possibleP+currentP
 
 def start(x):
     option0=checkCurrent(np.append(x,0).tolist())
@@ -48,4 +48,10 @@ def start(x):
     return [option0,option1]
 
 x=np.array([])
-print(start(x))
+tree=[]
+for i in range(w.size):
+    tree.append(start(x))
+    x=np.append(x,np.array(tree[i]).argmax())
+
+print(x)
+print(tree)
