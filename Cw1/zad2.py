@@ -47,11 +47,19 @@ def start(x):
     option1=checkCurrent(np.append(x,1).tolist())
     return [option0,option1]
 
-x=np.array([])
-tree=[]
-for i in range(w.size):
-    tree.append(start(x))
-    x=np.append(x,np.array(tree[i]).argmax())
+def buildTree(currentBest, treenp):
+    tree=treenp.tolist()
+    for i in range(w.size-len(tree)):
+        tree.append(start(currentBest))
+        currentBest=np.append(currentBest,np.array(tree[i]).argmax())
+    return currentBest
 
-print(x)
-print(tree)
+currentBest=np.array([])
+tree=[]
+
+print(buildTree(currentBest, np.array(tree)))
+
+
+#for i in range(len(tree)):
+  #  if(np.array(tree[len(tree)-i]).min()>currentBest):
+        
