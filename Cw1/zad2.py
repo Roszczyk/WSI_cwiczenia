@@ -42,6 +42,10 @@ def checkCurrent(current):
             possibleP=possibleP-((0-restW)/w.item(sorted_items[count]))*p.item(sorted_items[count])
     return possibleP
 
-print(checkCurrent())
-    
-    
+def start(x):
+    option0=checkCurrent(np.append(x,0).tolist())
+    option1=checkCurrent(np.append(x,1).tolist())
+    return [option0,option1]
+
+x=np.array([])
+print(start(x))
