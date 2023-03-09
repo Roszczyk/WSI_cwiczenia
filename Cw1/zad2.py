@@ -47,19 +47,51 @@ def start(x):
     option1=checkCurrent(np.append(x,1).tolist())
     return [option0,option1]
 
-def buildTree(currentBest, treenp):
-    tree=treenp.tolist()
-    for i in range(w.size-len(tree)):
+def score(tree,currentBest):
+     bestScore=tree[len(tree)-1][currentBest[(len(currentBest)-1)]]
+     return bestScore
+
+def buildTree(currentBest, tree):
+    startTreeLen=len(tree)
+    for i in range(w.size-startTreeLen):
         tree.append(start(currentBest))
-        currentBest=np.append(currentBest,np.array(tree[i]).argmax())
-    return currentBest
+        currentBest.append(np.array(tree[startTreeLen+i]).argmax())
+    return [currentBest, tree]
 
-currentBest=np.array([])
+currentBest=[]
+currentScore=0
 tree=[]
+result=buildTree(currentBest,tree)
+currentBest=result[0]
+tree=result[1]
+currentScore=score(tree, currentBest)
 
-print(buildTree(currentBest, np.array(tree)))
+print(f"Best: {currentBest}, Score: {currentScore}, Tree: {tree}")
 
+print(len(tree))
 
-#for i in range(len(tree)):
-  #  if(np.array(tree[len(tree)-i]).min()>currentBest):
-        
+for i in range(len(tree)):
+    print(min(tree[len(tree)-i-1]))
+    if(min(tree[len(tree)-i-1])>currentScore):
+        tempBest=[]
+        temp_tree=[]
+        for j in range(len(tree)-i-1):
+            tempBest.append(currentBest[j])
+            temp_tree.append(tree[j])
+        if(currentBest[len(tempBest)]==0):
+            tempBest.append(1)
+            temp_tree.append(tree[len(tree)-i-1][1])
+        else:
+            tempBest.append(0)
+            temp_tree.append(tree[len(tree)-i-1][0])
+        temp_data=buildTree(tempBest, temp_tree)
+        temp_Score=score(temp_data[1], temp_data[0])
+        if temp_Score>currentScore:
+            currentScore=temp_Score
+            tree=temp_tree
+            currentBest=temp_data[0]
+    else:
+        continue
+
+print(temp_data[0])
+print(currentBest)
