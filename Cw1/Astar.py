@@ -68,10 +68,7 @@ currentScore=score(tree, currentBest)
 
 print(f"Best: {currentBest}, Score: {currentScore}, Tree: {tree}")
 
-print(len(tree))
-
 for i in range(len(tree)):
-    print(min(tree[len(tree)-i-1]))
     if(min(tree[len(tree)-i-1])>currentScore):
         tempBest=[]
         temp_tree=[]

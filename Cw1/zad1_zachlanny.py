@@ -27,7 +27,7 @@ for j in range(len(ppw)):
 
 currentP=0
 currentW=0
-solution=[0,0,0,0]
+solution=[0]*w.size
 for i in range(len(sorted_items)):
     currentW=currentW+w.item(sorted_items[i])
     if (currentW<W):
