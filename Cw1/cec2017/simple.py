@@ -20,8 +20,14 @@ def f1(x, rotation=None, shift=None):
             vector from the benchmark suite will be used.
     """
     x = np.array(x)
+<<<<<<< HEAD
     # nx=x.shape[1]
     nx = x.shape[1]
+=======
+    print(x.shape)
+    nx = x.shape[0]
+    # nx = x.shape[1]
+>>>>>>> 5f15f1c8192c1725f0ae1a1179ae42f5b48e1f15
 
     if rotation is None:
         rotation = transforms.rotations[nx][0]
