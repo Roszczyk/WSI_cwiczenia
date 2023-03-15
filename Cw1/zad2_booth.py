@@ -3,8 +3,7 @@ from autograd import grad
 import matplotlib.pyplot as plt
 
 def booth(x):
-    y=((x[0]+2*x[1]-7)**2+(2*x[0]+x[1]-5)**2)
-    return y
+    return (x[0]+2*x[1]-7)**2+(2*x[0]+x[1]-5)**2
 
 MAX_X = 100
 PLOT_STEP = 0.1
@@ -33,7 +32,7 @@ for i in range (1000):
     plt.arrow(xtemp[0], xtemp[1], x[0]-xtemp[0], x[1]-xtemp[1], head_width=1, head_length=1, fc='k', ec='k')
 
 
-print(f"x={x} q(x)={q(x)} gradient: {d}")
+print(f"x={x} q(x)={q(x)}")
 
 plt.show()
 
