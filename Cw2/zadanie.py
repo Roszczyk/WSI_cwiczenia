@@ -7,8 +7,10 @@ BUDGET=10000            #dotępny budżet ewaluacji funkcji celu
 MU=20                   #liczba osobników w populacji
 tmax=BUDGET/MU          #liczba iteracji
 MUTATION_PROBABILITY=np.random.uniform(0, 1, 1)[0]  #prawdopodobieństwo mutacji
-UPPER_BOUND = 100
-DIMENSIONALITY = 10
+UPPER_BOUND = 100       #ograniczenie kostkowe
+DIMENSIONALITY = 10     #wymiarowość
+TOURNAMENT_GROUP=2      #rozmiar grupy w selekcji turniejowej
+ELITE=3                 #rozmiar elity w sukcesji elitarnej
 
 #DEKLARACJE ZMIENNYCH
 t=0                     #dokonana liczba iteracji
