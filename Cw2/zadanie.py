@@ -38,6 +38,9 @@ for i in range(MU):
 for i in range(MU):
     tournamentProb.append((1/(MU**TOURNAMENT_GROUP))*((MU-rankPop[i]+1)**TOURNAMENT_GROUP-(MU-rankPop[i])**TOURNAMENT_GROUP))
 
+#WYBÓR ELEMENTÓW DO TURNIEJU:
+tournament=np.random.choice(MU, TOURNAMENT_GROUP, tournamentProb)
+
 #SUKCESJA:
 # for t in range(tmax):
 #     newPop=[]               #deklaracja populacji potomnej
