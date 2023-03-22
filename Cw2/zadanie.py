@@ -31,7 +31,7 @@ tempFunPop=np.array(objFunPop)
 biggest=tempFunPop.max()+1
 for i in range(MU):
     curBest=tempFunPop.argmin()
-    rankPop[curBest]=i
+    rankPop[curBest]=i+1
     tempFunPop[curBest]=biggest
 
 #PRAWDOPODOBIEŃSTWO WYBRANIA DO TURNIEJU:
