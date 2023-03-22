@@ -34,9 +34,9 @@ for i in range(MU):
     rankPop[curBest]=i
     tempFunPop[curBest]=biggest
 
+#PRAWDOPODOBIEŃSTWO WYBRANIA DO TURNIEJU:
 for i in range(MU):
-    print(i, currentPop[i], objFunPop[i], rankPop[i])
-print(tempFunPop)
+    tournamentProb.append((1/(MU**TOURNAMENT_GROUP))*((MU-rankPop[i]+1)**TOURNAMENT_GROUP-(MU-rankPop[i])**TOURNAMENT_GROUP))
 
 #SUKCESJA:
 # for t in range(tmax):
