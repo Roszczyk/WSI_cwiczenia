@@ -4,7 +4,7 @@ from cec2017.functions import f4, f5
 
 #STAŁE DLA WYWOŁANIA:
 BUDGET=10000            #dotępny budżet ewaluacji funkcji celu
-MU=20                   #liczba osobników w populacji
+MU=10                   #liczba osobników w populacji
 tmax=BUDGET/MU          #liczba iteracji
 MUTATION_PROBABILITY=np.random.uniform(0, 1, 1)[0]  #prawdopodobieństwo mutacji
 UPPER_BOUND = 100       #ograniczenie kostkowe
@@ -13,9 +13,10 @@ TOURNAMENT_GROUP=2      #rozmiar grupy w selekcji turniejowej
 ELITE=3                 #rozmiar elity w sukcesji elitarnej
 
 #DEKLARACJE ZMIENNYCH
-t=0                     #dokonana liczba iteracji
 currentPop=[]           #populacja
-objFunPop=[]            #wartosci funkcji celu dla osobnikow populacji
+objFunPop=[]            #wartości funkcji celu dla osobnikow populacji
+rankPop=[None]*MU       #ranga dla każdego z osobników populacji
+tournamentProb=[]       #wartości prawdopodobieństwa udziału w turnieju dla osobników populacji
 
 #DEFINICJA OPTYMALIZOWANEJ FUNKCJI:
 q=f4
@@ -24,4 +25,19 @@ q=f4
 for i in range(MU):
     currentPop.append(np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=DIMENSIONALITY))
     objFunPop.append(q(currentPop[i]))
-    print(i, currentPop[i], objFunPop[i])
+
+#NADANIE RANG:
+tempFunPop=np.array(objFunPop)
+biggest=tempFunPop.max()+1
+for i in range(MU):
+    curBest=tempFunPop.argmin()
+    rankPop[curBest]=i
+    tempFunPop[curBest]=biggest
+
+for i in range(MU):
+    print(i, currentPop[i], objFunPop[i], rankPop[i])
+print(tempFunPop)
+
+#SUKCESJA:
+# for t in range(tmax):
+#     newPop=[]               #deklaracja populacji potomnej
