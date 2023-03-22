@@ -41,6 +41,9 @@ for i in range(MU):
 #WYBÓR ELEMENTÓW DO TURNIEJU:
 tournament=np.random.choice(MU, TOURNAMENT_GROUP, tournamentProb)
 
+#ROZEGRANIE TURNIEJU
+
+
 #SUKCESJA:
 # for t in range(tmax):
 #     newPop=[]               #deklaracja populacji potomnej
