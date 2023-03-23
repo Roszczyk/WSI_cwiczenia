@@ -6,7 +6,6 @@ from cec2017.functions import f4, f5
 BUDGET=10000            #dotępny budżet ewaluacji funkcji celu
 MU=10                   #liczba osobników w populacji
 tmax=int(BUDGET/MU)     #liczba iteracji
-        # MUTATION_PROBABILITY=np.random.uniform(0, 1, 1)[0]  #prawdopodobieństwo mutacji
 MUTATION_FORCE=5        #siła mutacji
 UPPER_BOUND = 100       #ograniczenie kostkowe
 DIMENSIONALITY = 10     #wymiarowość
