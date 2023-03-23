@@ -40,9 +40,12 @@ for i in range(MU):
 
 #WYBÓR ELEMENTÓW DO TURNIEJU:
 tournament=np.random.choice(MU, TOURNAMENT_GROUP, tournamentProb)
+tournamentValues=[]
+for i in range(len(tournament)):
+    tournamentValues.append(objFunPop[tournament[i]])
 
-#ROZEGRANIE TURNIEJU
-
+#WYBÓR ZWYCIĘZCY TURNIEJU
+tournamentWinner=tournament[np.array(tournamentValues).argmin()]
 
 #SUKCESJA:
 # for t in range(tmax):
