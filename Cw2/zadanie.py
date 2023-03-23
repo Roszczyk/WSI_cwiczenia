@@ -5,7 +5,7 @@ from cec2017.functions import f4, f5
 #STAŁE DLA WYWOŁANIA:
 BUDGET=10000            #dotępny budżet ewaluacji funkcji celu
 MU=10                   #liczba osobników w populacji
-tmax=BUDGET/MU          #liczba iteracji
+tmax=int(BUDGET/MU)     #liczba iteracji
         # MUTATION_PROBABILITY=np.random.uniform(0, 1, 1)[0]  #prawdopodobieństwo mutacji
 MUTATION_FORCE=5        #siła mutacji
 UPPER_BOUND = 100       #ograniczenie kostkowe
@@ -27,45 +27,44 @@ for i in range(MU):
     currentPop.append(np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=DIMENSIONALITY))
     objFunPop.append(q(currentPop[i]))
 
-#NADANIE RANG:
-tempFunPop=np.array(objFunPop)
-biggest=tempFunPop.max()+1
-for i in range(MU):
-    curBest=tempFunPop.argmin()
-    rankPop[curBest]=i+1
-    tempFunPop[curBest]=biggest
 
-#PRAWDOPODOBIEŃSTWO WYBRANIA DO TURNIEJU:
-for i in range(MU):
-    tournamentProb.append((1/(MU**TOURNAMENT_GROUP))*((MU-rankPop[i]+1)**TOURNAMENT_GROUP-(MU-rankPop[i])**TOURNAMENT_GROUP))
+for t in range(tmax):
+    #NADANIE RANG:
+    tempFunPop=np.array(objFunPop)
+    biggest=tempFunPop.max()+1
+    for i in range(MU):
+        curBest=tempFunPop.argmin()
+        rankPop[curBest]=i+1
+        tempFunPop[curBest]=biggest
 
-#WYBÓR ELEMENTÓW DO TURNIEJU:
-tournament=np.random.choice(MU, TOURNAMENT_GROUP, replace=False, p=tournamentProb)
-tournamentValues=[]
-for i in range(len(tournament)):
-    tournamentValues.append(objFunPop[tournament[i]])
+    #PRAWDOPODOBIEŃSTWO WYBRANIA DO TURNIEJU:
+    for i in range(MU):
+        tournamentProb.append((1/(MU**TOURNAMENT_GROUP))*((MU-rankPop[i]+1)**TOURNAMENT_GROUP-(MU-rankPop[i])**TOURNAMENT_GROUP))
 
-#WYBÓR ZWYCIĘZCY TURNIEJU
-tournamentWinner=tournament[np.array(tournamentValues).argmin()]
+    #WYBÓR ELEMENTÓW DO TURNIEJU:
+    tournament=np.random.choice(MU, TOURNAMENT_GROUP, tournamentProb)
+    tournamentValues=[]
+    for i in range(len(tournament)):
+        tournamentValues.append(objFunPop[tournament[i]])
 
-#MUTACJA ZWYCIĘZCY TURNIEJU
-print(currentPop[tournamentWinner])
-currentPop.append(currentPop[tournamentWinner]+MUTATION_FORCE*np.random.normal(0,1,DIMENSIONALITY))
-objFunPop.append(q(currentPop[tournamentWinner]))
-print(currentPop[tournamentWinner])
+    #WYBÓR ZWYCIĘZCY TURNIEJU
+    tournamentWinner=tournament[np.array(tournamentValues).argmin()]
 
-#SUKCESJA
-print(objFunPop)
+    #MUTACJA ZWYCIĘZCY TURNIEJU
+    currentPop.append(currentPop[tournamentWinner]+MUTATION_FORCE*np.random.normal(0,1,DIMENSIONALITY))
+    objFunPop.append(q(currentPop[tournamentWinner]))
 
-tempPop=[]
-tempObjPop=[]
-biggest=np.array(objFunPop).max()+1
-for i in range(MU):
-    tempPop.append(currentPop[np.array(objFunPop).argmin()])
-    tempObjPop.append(objFunPop[np.array(objFunPop).argmin()])
-    objFunPop[np.array(objFunPop).argmin()]=biggest
-currentPop=tempPop
-objFunPop=tempObjPop
+    #SUKCESJA
 
-print(objFunPop)
+    tempPop=[]
+    tempObjPop=[]
+    biggest=np.array(objFunPop).max()+10
+    for i in range(MU):
+        tempPop.append(currentPop[np.array(objFunPop).argmin()])
+        tempObjPop.append(objFunPop[np.array(objFunPop).argmin()])
+        objFunPop[np.array(objFunPop).argmin()]=biggest
+    currentPop=tempPop
+    objFunPop=tempObjPop
+
+    print(np.array(objFunPop).max())
 
