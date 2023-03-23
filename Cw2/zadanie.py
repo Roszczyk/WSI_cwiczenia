@@ -6,7 +6,7 @@ from cec2017.functions import f4, f5
 BUDGET=10000            #dotępny budżet ewaluacji funkcji celu
 MU=10                   #liczba osobników w populacji
 tmax=BUDGET/MU          #liczba iteracji
-        #MUTATION_PROBABILITY=np.random.uniform(0, 1, 1)[0]  #prawdopodobieństwo mutacji
+        # MUTATION_PROBABILITY=np.random.uniform(0, 1, 1)[0]  #prawdopodobieństwo mutacji
 MUTATION_FORCE=5        #siła mutacji
 UPPER_BOUND = 100       #ograniczenie kostkowe
 DIMENSIONALITY = 10     #wymiarowość
@@ -40,7 +40,7 @@ for i in range(MU):
     tournamentProb.append((1/(MU**TOURNAMENT_GROUP))*((MU-rankPop[i]+1)**TOURNAMENT_GROUP-(MU-rankPop[i])**TOURNAMENT_GROUP))
 
 #WYBÓR ELEMENTÓW DO TURNIEJU:
-tournament=np.random.choice(MU, TOURNAMENT_GROUP, tournamentProb)
+tournament=np.random.choice(MU, TOURNAMENT_GROUP, replace=False, p=tournamentProb)
 tournamentValues=[]
 for i in range(len(tournament)):
     tournamentValues.append(objFunPop[tournament[i]])
@@ -49,11 +49,23 @@ for i in range(len(tournament)):
 tournamentWinner=tournament[np.array(tournamentValues).argmin()]
 
 #MUTACJA ZWYCIĘZCY TURNIEJU
-print(objFunPop[tournamentWinner])
-currentPop[tournamentWinner]=currentPop[tournamentWinner]+MUTATION_FORCE*np.random.normal(0,1)
-objFunPop[tournamentWinner]=q(currentPop[tournamentWinner])
-print(objFunPop[tournamentWinner])
+print(currentPop[tournamentWinner])
+currentPop.append(currentPop[tournamentWinner]+MUTATION_FORCE*np.random.normal(0,1,DIMENSIONALITY))
+objFunPop.append(q(currentPop[tournamentWinner]))
+print(currentPop[tournamentWinner])
 
-#SUKCESJA:
-# for t in range(tmax):
-#     newPop=[]               #deklaracja populacji potomnej
+#SUKCESJA
+print(objFunPop)
+
+tempPop=[]
+tempObjPop=[]
+biggest=np.array(objFunPop).max()+1
+for i in range(MU):
+    tempPop.append(currentPop[np.array(objFunPop).argmin()])
+    tempObjPop.append(objFunPop[np.array(objFunPop).argmin()])
+    objFunPop[np.array(objFunPop).argmin()]=biggest
+currentPop=tempPop
+objFunPop=tempObjPop
+
+print(objFunPop)
+
