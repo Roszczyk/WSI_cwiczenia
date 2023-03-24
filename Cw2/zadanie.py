@@ -3,7 +3,7 @@ from cec2017.functions import f4, f5
 
 #STAŁE DLA WYWOŁANIA:
 BUDGET=10000            #dotępny budżet ewaluacji funkcji celu
-MU=100                  #liczba osobników w populacji
+MU=10                  #liczba osobników w populacji
 tmax=int(BUDGET/MU)     #liczba iteracji
 MUTATION_FORCE=5        #siła mutacji
 UPPER_BOUND = 100       #ograniczenie kostkowe
