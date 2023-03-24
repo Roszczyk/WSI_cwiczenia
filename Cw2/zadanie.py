@@ -1,16 +1,15 @@
 import numpy as np
 from cec2017.functions import f4, f5
 
-
 #STAŁE DLA WYWOŁANIA:
 BUDGET=10000            #dotępny budżet ewaluacji funkcji celu
-MU=20                   #liczba osobników w populacji
+MU=100                  #liczba osobników w populacji
 tmax=int(BUDGET/MU)     #liczba iteracji
 MUTATION_FORCE=5        #siła mutacji
 UPPER_BOUND = 100       #ograniczenie kostkowe
 DIMENSIONALITY = 10     #wymiarowość
 TOURNAMENT_GROUP=2      #rozmiar grupy w selekcji turniejowej
-ELITE=3                 #rozmiar elity w sukcesji elitarnej
+ELITE=5                 #rozmiar elity w sukcesji elitarnej
 
 #DEKLARACJE ZMIENNYCH
 currentPop=[]           #populacja
@@ -19,7 +18,7 @@ rankPop=[None]*MU       #ranga dla każdego z osobników populacji
 tournamentProb=[]       #wartości prawdopodobieństwa udziału w turnieju dla osobników populacji
 
 #DEFINICJA OPTYMALIZOWANEJ FUNKCJI:
-q=f5
+q=f4
 
 #LOSOWANIE POPULACJI POCZĄTKOWEJ:
 for i in range(MU):
@@ -45,7 +44,7 @@ for t in range(tmax):
     newPopValues=[]
 
     for i in range(MU):
-        #WYBÓR ELEMENTÓW DO TURNIEJU:
+        #WYBÓR ELEMENTÓW ZA POMOCĄ TURNIEJU:
         tournament=np.random.choice(MU, TOURNAMENT_GROUP, tournamentProb)
         tournamentValues=[]
         for i in range(len(tournament)):
@@ -76,7 +75,7 @@ for t in range(tmax):
     currentPop=newPop
     objFunPop=newPopValues
 
-    print(np.array(objFunPop).min())
+    print(round(np.array(objFunPop).min(),3))
 
 print(currentPop[np.array(objFunPop).argmin()])
 
