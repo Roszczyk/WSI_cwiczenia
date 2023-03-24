@@ -55,17 +55,19 @@ for t in range(tmax):
         tournamentWinner=tournament[np.array(tournamentValues).argmin()]
 
         #MUTACJA ZWYCIĘZCY TURNIEJU
-        newPop.append(currentPop[tournamentWinner]+MUTATION_FORCE*np.random.normal(0,1,DIMENSIONALITY))
-        newPopValues.append(q(currentPop[tournamentWinner]+MUTATION_FORCE*np.random.normal(0,1,DIMENSIONALITY)))
+        new=currentPop[tournamentWinner]+MUTATION_FORCE*np.random.normal(0,1,DIMENSIONALITY)
+        newPop.append(new)
+        newPopValues.append(q(new))
 
     #DODANIE ELITY DO NOWEJ POPULACJI:
+    biggest=np.array(objFunPop).max()+10
     for i in range(ELITE):
         temp=np.array(objFunPop).argmin()
         newPop.append(currentPop[temp])
         newPopValues.append(np.array(objFunPop).min())
-        objFunPop[temp]=np.array(objFunPop).max()+10
+        objFunPop[temp]=biggest
 
-    #WYRÓWNYWANIE SKŁADU POPULACJI
+    #WYRÓWNYWANIE SKŁADU POPULACJI:
     for i in range(len(newPop)-MU):
         temp=np.array(newPopValues).argmax()
         newPop.pop(temp)
@@ -74,7 +76,6 @@ for t in range(tmax):
     currentPop=newPop
     objFunPop=newPopValues
 
-    print(len(currentPop))
     print(np.array(objFunPop).min())
 
 print(currentPop[np.array(objFunPop).argmin()])
