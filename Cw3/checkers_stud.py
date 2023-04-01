@@ -308,14 +308,14 @@ class Board:
                 if (self.board[row][col].is_empty()==False):
                     if(self.board[row][col].is_white()==True):
                         if(self.board[row][col].is_king()==True):
-                            h=h+10
+                            h=h+KING_SCORE
                         else:
-                            h=h+1
+                            h=h+PAWN_SCORE
                     else:
                         if(self.board[row][col].is_king()==True):
-                            h=h-10
+                            h=h-KING_SCORE
                         else:
-                            h=h-1
+                            h=h-PAWN_SCORE
 
                 #STUDENT CODE END
         return h                        
@@ -440,9 +440,21 @@ def minimax_a_b(board, depth):
     #STUDENT CODE END
     return best_move
 
-def minimax_a_b_recurr(board, depth, move_max, a, b):
+def minimax_a_b_recurr(board, depth, move_max, best_move, a, b): #DOPISANO: argument best_move
     #STUDENT CODE BEGIN
-    pass
+    if depth==0:
+        return best_move
+    if(move_max==True):
+        max_evaluation=float('-inf')
+        for row in range(BOARD_WIDTH):
+            for col in range((row+1) % 2, BOARD_WIDTH, 2):
+                piece=board.board[row][col]
+                for move in board.get_piece_moves(piece):
+                    
+    if(move_max==False):
+        min_evaluation=float('inf')
+
+
     #STUDENT CODE END
 
 def main():
@@ -451,12 +463,22 @@ def main():
     clock = pygame.time.Clock()
     game = Game(window)
 
+    print("Game state: ", game.board.evaluate(False))
+
     while is_running:
         clock.tick(FPS)
 
 
         if game.board.end():
             is_running = False
+            #STUDENT CODE BEGIN
+            if(game.board.evaluate(False)>0):
+                print("White wins!")
+            if(game.board.evaluate(False)<0):
+                print("Blue wins!")
+            else:
+                print("It's a draw!")
+            #STUDENT CODE END
             
             break #przydalby sie jakiś komunikat kto wygrał zamiast break
 
