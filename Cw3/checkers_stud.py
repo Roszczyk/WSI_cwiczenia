@@ -26,6 +26,11 @@ MINIMAX_DEPTH = 5
 WIN_WIDTH = 800
 WIN_HEIGHT = 800
 
+#STUDENT CODE BEGIN
+PAWN_SCORE = 1
+KING_SCORE = 10
+#STUDENT CODE END
+
 
 BOARD_WIDTH = 8
 
@@ -202,7 +207,7 @@ class King(Pawn):
 
 class Board:
     def __init__(self, window): #row, col
-        self.board = []#np.full((BOARD_WIDTH, BOARD_WIDTH), None)
+        self.board = [] #np.full((BOARD_WIDTH, BOARD_WIDTH), None)
         self.window = window
         self.marked_piece = None 
         self.something_is_marked=False
@@ -292,12 +297,27 @@ class Board:
                         pos_moves.append(Move(piece,new_row+dir_y, new_col+1, self.board[new_row][new_col]))  
         return pos_moves
     
-    #ToDo
+    #STUDENT CODE BEGIN
+
+    #STUDENT CODE END
     def evaluate(self, is_blue_turn):
         h=0
         for row in range(BOARD_WIDTH):
             for col in range((row+1) % 2, BOARD_WIDTH, 2):
-                #ToDo
+                #STUDENT CODE BEGIN
+                if (self.board[row][col].is_empty()==False):
+                    if(self.board[row][col].is_white()==True):
+                        if(self.board[row][col].is_king()==True):
+                            h=h+10
+                        else:
+                            h=h+1
+                    else:
+                        if(self.board[row][col].is_king()==True):
+                            h=h-10
+                        else:
+                            h=h-1
+
+                #STUDENT CODE END
         return h                        
     
     def get_possible_moves(self, is_blue_turn):
@@ -415,11 +435,15 @@ class Game:
 
 
 def minimax_a_b(board, depth):
-    #ToDo
+    #STUDENT CODE BEGIN
+    best_move=0
+    #STUDENT CODE END
     return best_move
 
 def minimax_a_b_recurr(board, depth, move_max, a, b):
-    #ToDo
+    #STUDENT CODE BEGIN
+    pass
+    #STUDENT CODE END
 
 def main():
     window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
