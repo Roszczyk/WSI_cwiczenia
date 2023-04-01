@@ -300,7 +300,7 @@ class Board:
     #STUDENT CODE BEGIN
 
     #STUDENT CODE END
-    def evaluate(self, is_blue_turn):
+    def evaluate(self):     #usunięto argument dot. kto dokonuje ruchu
         h=0
         for row in range(BOARD_WIDTH):
             for col in range((row+1) % 2, BOARD_WIDTH, 2):
@@ -454,7 +454,9 @@ def minimax_a_b_recurr(board, depth, move_max, best_move, a, b): #DOPISANO: argu
                 piece=board.board[row][col]
                 for move in board.get_piece_moves(piece):
                     copyBoard=board
-                    pos_move=minimax_a_b_recurr(copyBoard.move(move), depth-1, not move_max, best_move, a, b)
+                    copyBoard.move()
+                    pos_move=minimax_a_b_recurr(copyBoard, depth-1, not move_max, best_move, a, b)
+                    pos_move[1]=copyBoard.evaluate()
                     if (pos_move[1]>max_evaluation):
                         best_move=pos_move
                         max_evaluation=best_move[1]
@@ -470,7 +472,9 @@ def minimax_a_b_recurr(board, depth, move_max, best_move, a, b): #DOPISANO: argu
                 piece=board.board[row][col]
                 for move in board.get_piece_moves(piece):
                     copyBoard=board
-                    pos_move=minimax_a_b_recurr(copyBoard.move(move), depth-1, not move_max, best_move, a, b)
+                    copyBoard.move(move)
+                    pos_move=minimax_a_b_recurr(copyBoard, depth-1, not move_max, best_move, a, b)
+                    pos_move[1]=copyBoard.evaluate()
                     if (pos_move[1]<min_evaluation):
                         best_move=pos_move
                         min_evaluation=best_move[1]
@@ -488,7 +492,7 @@ def main():
     clock = pygame.time.Clock()
     game = Game(window)
 
-    print("Game state: ", game.board.evaluate(False))
+    print("Game state: ", game.board.evaluate())
 
     while is_running:
         clock.tick(FPS)
@@ -497,9 +501,9 @@ def main():
         if game.board.end():
             is_running = False
             #STUDENT CODE BEGIN
-            if(game.board.evaluate(False)>0):
+            if(game.board.evaluate()>0):
                 print("White wins!")
-            if(game.board.evaluate(False)<0):
+            if(game.board.evaluate()<0):
                 print("Blue wins!")
             else:
                 print("It's a draw!")
