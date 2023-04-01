@@ -436,23 +436,48 @@ class Game:
 
 def minimax_a_b(board, depth):
     #STUDENT CODE BEGIN
-    best_move=0
+    best_move=[0,0] #move, evaluation
     #STUDENT CODE END
     return best_move
 
 def minimax_a_b_recurr(board, depth, move_max, best_move, a, b): #DOPISANO: argument best_move
     #STUDENT CODE BEGIN
-    if depth==0:
+
+    #best_move, pos_move=[move, evaluation]
+    if depth==0 or board.end()==True:
         return best_move
+    
     if(move_max==True):
         max_evaluation=float('-inf')
         for row in range(BOARD_WIDTH):
             for col in range((row+1) % 2, BOARD_WIDTH, 2):
                 piece=board.board[row][col]
                 for move in board.get_piece_moves(piece):
-                    
+                    copyBoard=board
+                    pos_move=minimax_a_b_recurr(copyBoard.move(move), depth-1, not move_max, best_move, a, b)
+                    if (pos_move[1]>max_evaluation):
+                        best_move=pos_move
+                        max_evaluation=best_move[1]
+                    a=max(a,pos_move[1])
+                    if(b<=a):           #pomysł alternatywny: if(a<=b) then return
+                        break
+        return best_move
+
     if(move_max==False):
         min_evaluation=float('inf')
+        for row in range(BOARD_WIDTH):
+            for col in range((row+1) % 2, BOARD_WIDTH, 2):
+                piece=board.board[row][col]
+                for move in board.get_piece_moves(piece):
+                    copyBoard=board
+                    pos_move=minimax_a_b_recurr(copyBoard.move(move), depth-1, not move_max, best_move, a, b)
+                    if (pos_move[1]<min_evaluation):
+                        best_move=pos_move
+                        min_evaluation=best_move[1]
+                    a=max(a,pos_move[1])
+                    if(b<=a):           #pomysł alternatywny: if(a<=b) then return
+                        break
+        return best_move
 
 
     #STUDENT CODE END
