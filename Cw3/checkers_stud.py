@@ -23,8 +23,8 @@ FPS = 20
 
 MINIMAX_DEPTH = 5
 
-WIN_WIDTH = 800
-WIN_HEIGHT = 800
+WIN_WIDTH = 500
+WIN_HEIGHT = 500
 
 #STUDENT CODE BEGIN
 PAWN_SCORE = 1
@@ -277,7 +277,7 @@ class Board:
                     elif self.board[new_row][new_col].is_white()==enemy_is_white and new_row+dir_y>=0 and new_col+1<BOARD_WIDTH and self.board[new_row+dir_y][new_col+1].is_empty():
                         pos_moves.append(Move(piece,new_row+dir_y, new_col+1, self.board[new_row][new_col]))  
 
-        if piece.is_blue() or (piece.is_white() and self.board[row][col].is_king()):
+        if piece.is_blue() or (piece.is_white() and piece.is_king()):
             dir_y = 1
             if row<BOARD_WIDTH-1:
                 new_row=row+dir_y
@@ -437,6 +437,7 @@ class Game:
 def minimax_a_b(board, depth):
     #STUDENT CODE BEGIN
     best_move=[0,0] #move, evaluation
+    best_move=minimax_a_b_recurr(board, depth, board.white_turn, best_move, float('-inf'), float('inf'))
     #STUDENT CODE END
     return best_move
 
@@ -449,38 +450,35 @@ def minimax_a_b_recurr(board, depth, move_max, best_move, a, b): #DOPISANO: argu
     
     if(move_max==True):
         max_evaluation=float('-inf')
-        for row in range(BOARD_WIDTH):
-            for col in range((row+1) % 2, BOARD_WIDTH, 2):
-                piece=board.board[row][col]
-                for move in board.get_piece_moves(piece):
-                    copyBoard=board
-                    copyBoard.move()
-                    pos_move=minimax_a_b_recurr(copyBoard, depth-1, not move_max, best_move, a, b)
-                    pos_move[1]=copyBoard.evaluate()
-                    if (pos_move[1]>max_evaluation):
-                        best_move=pos_move
-                        max_evaluation=best_move[1]
-                    a=max(a,pos_move[1])
-                    if(b<=a):           #pomysł alternatywny: if(a<=b) then return
-                        break
+        for move in board.get_possible_moves(move_max):
+            print(move)
+            copyBoard=board
+            copyBoard.move(PosMoveField(move_max, 0, move.dest_row, move.dest_col, board, move.piece.row, move.piece.col, move))
+            pos_move=minimax_a_b_recurr(copyBoard, depth-1, not move_max, best_move, a, b)
+            print(pos_move)
+            print(pos_move[0])
+            pos_move[1]=copyBoard.evaluate()
+            if (pos_move[1]>max_evaluation):
+                best_move[0]=move
+                max_evaluation=best_move[1]
+            a=max(a,pos_move[1])
+            if(b<=a):           #pomysł alternatywny: if(a<=b) then return
+                break
         return best_move
 
     if(move_max==False):
         min_evaluation=float('inf')
-        for row in range(BOARD_WIDTH):
-            for col in range((row+1) % 2, BOARD_WIDTH, 2):
-                piece=board.board[row][col]
-                for move in board.get_piece_moves(piece):
-                    copyBoard=board
-                    copyBoard.move(move)
-                    pos_move=minimax_a_b_recurr(copyBoard, depth-1, not move_max, best_move, a, b)
-                    pos_move[1]=copyBoard.evaluate()
-                    if (pos_move[1]<min_evaluation):
-                        best_move=pos_move
-                        min_evaluation=best_move[1]
-                    a=max(a,pos_move[1])
-                    if(b<=a):           #pomysł alternatywny: if(a<=b) then return
-                        break
+        for move in board.get_possible_moves(move_max):
+            copyBoard=board
+            copyBoard.move(PosMoveField(move_max, board.window, move.dest_row, move.dest_col, board, move.piece.row, move.piece.col, move))
+            pos_move=minimax_a_b_recurr(copyBoard, depth-1, not move_max, best_move, a, b)
+            pos_move[1]=copyBoard.evaluate()
+            if (pos_move[1]<min_evaluation):
+                best_move[0]=move
+                min_evaluation=best_move[1]
+            a=max(a,pos_move[1])
+            if(b<=a):           #pomysł alternatywny: if(a<=b) then return
+                break
         return best_move
 
 
@@ -512,7 +510,8 @@ def main():
             break #przydalby sie jakiś komunikat kto wygrał zamiast break
 
         if not game.board.white_turn:
-            move = minimax_a_b( deepcopy(game.board), MINIMAX_DEPTH)
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH)[0]
+            print(move)
             game.board.make_ai_move(move)
 
 
