@@ -471,6 +471,7 @@ def minimax_a_b_recurr(board, depth, move_max, best_move, a, b): #DOPISANO: argu
         for move in board.get_possible_moves(move_max):
             copyBoard=board
             copyBoard.move(PosMoveField(move_max, board.window, move.dest_row, move.dest_col, board, move.piece.row, move.piece.col, move))
+            # copyBoard.move(move)
             pos_move=minimax_a_b_recurr(copyBoard, depth-1, not move_max, best_move, a, b)
             pos_move[1]=copyBoard.evaluate()
             if (pos_move[1]<min_evaluation):
