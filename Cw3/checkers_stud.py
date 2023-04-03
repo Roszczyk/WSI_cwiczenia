@@ -311,7 +311,7 @@ class Board:
                             h=h+KING_SCORE
                         else:
                             h=h+PAWN_SCORE
-                    else:
+                    if(self.board[row][col].is_blue()==True):
                         if(self.board[row][col].is_king()==True):
                             h=h-KING_SCORE
                         else:
@@ -323,7 +323,7 @@ class Board:
     def get_possible_moves(self, is_blue_turn):
         pos_moves = []
         for row in range(BOARD_WIDTH):
-            for col in range((row+1) % 2, BOARD_WIDTH, 2):
+            for col in range((row+1) % 2, BOARD_WIDTH, 2): 
                 if not self.board[row][col].is_empty():
                     if (is_blue_turn and self.board[row][col].is_blue()) or (not is_blue_turn and self.board[row][col].is_white()):                        
                         pos_moves.extend( self.get_piece_moves(self.board[row][col]) )
@@ -405,10 +405,10 @@ class Board:
             else:
                 self.white_fig_left -= 1
             
-        if self.white_turn and d_row==0:#damka
+        if self.white_turn and d_row==0 and type(self.board[d_row][d_col])==Pawn:#damka
             self.board[d_row][d_col] = King(self.board[d_row][d_col])
 
-        if not self.white_turn and d_row==BOARD_WIDTH-1:#damka
+        if not self.white_turn and d_row==BOARD_WIDTH-1 and type(self.board[d_row][d_col])==Pawn:#damka
             self.board[d_row][d_col] = King(self.board[d_row][d_col])
             
         self.white_turn = not self.white_turn
@@ -436,13 +436,14 @@ class Game:
 
 def minimax_a_b(board, depth):
     #STUDENT CODE BEGIN
-    best_move=[0,0] #move, evaluation
-    best_move=minimax_a_b_recurr(board, depth, board.white_turn, best_move, float('-inf'), float('inf'))
+    best_move=minimax_a_b_recurr(board, depth, board.white_turn, float('-inf'), float('inf'))
+    best_move=best_move[0]
     #STUDENT CODE END
     return best_move
 
-def minimax_a_b_recurr(board, depth, move_max, best_move, a, b): #DOPISANO: argument best_move
+def minimax_a_b_recurr(board, depth, move_max, a, b):
     #STUDENT CODE BEGIN
+    best_move=[0,0]
 
     #best_move, pos_move=[move, evaluation]
     if depth==0 or board.end()==True:
@@ -450,35 +451,37 @@ def minimax_a_b_recurr(board, depth, move_max, best_move, a, b): #DOPISANO: argu
     
     if(move_max==True):
         max_evaluation=float('-inf')
-        for move in board.get_possible_moves(move_max):
-            print(move)
-            copyBoard=board
-            copyBoard.move(PosMoveField(move_max, 0, move.dest_row, move.dest_col, board, move.piece.row, move.piece.col, move))
-            pos_move=minimax_a_b_recurr(copyBoard, depth-1, not move_max, best_move, a, b)
-            print(pos_move)
-            print(pos_move[0])
+        possible_moves=board.get_possible_moves(not move_max)
+        for move in possible_moves:
+            copyBoard=deepcopy(board)
+            copyBoard.make_ai_move(move)
+            pos_move=minimax_a_b_recurr(copyBoard, depth-1, False, a, b)
             pos_move[1]=copyBoard.evaluate()
             if (pos_move[1]>max_evaluation):
                 best_move[0]=move
-                max_evaluation=best_move[1]
-            a=max(a,pos_move[1])
-            if(b<=a):           #pomysł alternatywny: if(a<=b) then return
+                max_evaluation=pos_move[1]
+                best_move[1]=max_evaluation
+            a=max([a,max_evaluation])
+            if(b<=a):     
+                print("odcięcie!")  #do debugowania
                 break
         return best_move
 
     if(move_max==False):
         min_evaluation=float('inf')
-        for move in board.get_possible_moves(move_max):
-            copyBoard=board
-            copyBoard.move(PosMoveField(move_max, board.window, move.dest_row, move.dest_col, board, move.piece.row, move.piece.col, move))
-            # copyBoard.move(move)
-            pos_move=minimax_a_b_recurr(copyBoard, depth-1, not move_max, best_move, a, b)
+        possible_moves=board.get_possible_moves(not move_max)
+        for move in possible_moves:
+            copyBoard=deepcopy(board)
+            copyBoard.make_ai_move(move)
+            pos_move=minimax_a_b_recurr(copyBoard, depth-1, True, a, b)
             pos_move[1]=copyBoard.evaluate()
             if (pos_move[1]<min_evaluation):
                 best_move[0]=move
-                min_evaluation=best_move[1]
-            a=max(a,pos_move[1])
-            if(b<=a):           #pomysł alternatywny: if(a<=b) then return
+                min_evaluation=pos_move[1]
+                best_move[1]=min_evaluation
+            b=min([b,min_evaluation])
+            if(b<=a):         
+                print("odcięcie!")  #do debugowania
                 break
         return best_move
 
@@ -491,11 +494,11 @@ def main():
     clock = pygame.time.Clock()
     game = Game(window)
 
-    print("Game state: ", game.board.evaluate())
+    #print("Game state: ", game.board.evaluate())
+   
 
     while is_running:
         clock.tick(FPS)
-
 
         if game.board.end():
             is_running = False
@@ -504,15 +507,20 @@ def main():
                 print("White wins!")
             if(game.board.evaluate()<0):
                 print("Blue wins!")
-            else:
+            if(game.board.evaluate()==0):
                 print("It's a draw!")
             #STUDENT CODE END
             
             break #przydalby sie jakiś komunikat kto wygrał zamiast break
 
         if not game.board.white_turn:
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH)[0]
-            print(move)
+            posmoves=game.board.get_possible_moves(True)
+            for i in posmoves:
+                print(i.piece.row, i.piece.col, "->", i.dest_row, i.dest_col, i.captures)
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH)
+            print("chosen move: ", move.piece.row, move.piece.col, "->", move.dest_row, move.dest_col, move.captures)
+            #print("Typ move: ", type(move))
+            #print(move)
             game.board.make_ai_move(move)
 
 
