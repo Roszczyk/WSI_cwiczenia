@@ -297,9 +297,7 @@ class Board:
                         pos_moves.append(Move(piece,new_row+dir_y, new_col+1, self.board[new_row][new_col]))  
         return pos_moves
     
-    #STUDENT CODE BEGIN
-
-    #STUDENT CODE END
+    
     def evaluate(self):     #usunięto argument dot. kto dokonuje ruchu
         h=0
         for row in range(BOARD_WIDTH):
@@ -310,12 +308,12 @@ class Board:
                         if(self.board[row][col].is_king()==True):
                             h=h+KING_SCORE
                         else:
-                            h=h+PAWN_SCORE
+                            h=h+PAWN_SCORE+row*row
                     if(self.board[row][col].is_blue()==True):
                         if(self.board[row][col].is_king()==True):
                             h=h-KING_SCORE
                         else:
-                            h=h-PAWN_SCORE
+                            h=h-PAWN_SCORE-row*row
 
                 #STUDENT CODE END
         return h                        
@@ -462,8 +460,7 @@ def minimax_a_b_recurr(board, depth, move_max, a, b):
                 max_evaluation=pos_move[1]
                 best_move[1]=max_evaluation
             a=max([a,max_evaluation])
-            if(b<=a):     
-                print("odcięcie!")  #do debugowania
+            if(b<=a):
                 break
         return best_move
 
@@ -480,8 +477,7 @@ def minimax_a_b_recurr(board, depth, move_max, a, b):
                 min_evaluation=pos_move[1]
                 best_move[1]=min_evaluation
             b=min([b,min_evaluation])
-            if(b<=a):         
-                print("odcięcie!")  #do debugowania
+            if(b<=a): 
                 break
         return best_move
 
@@ -514,13 +510,8 @@ def main():
             break #przydalby sie jakiś komunikat kto wygrał zamiast break
 
         if not game.board.white_turn:
-            posmoves=game.board.get_possible_moves(True)
-            for i in posmoves:
-                print(i.piece.row, i.piece.col, "->", i.dest_row, i.dest_col, i.captures)
             move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH)
             print("chosen move: ", move.piece.row, move.piece.col, "->", move.dest_row, move.dest_col, move.captures)
-            #print("Typ move: ", type(move))
-            #print(move)
             game.board.make_ai_move(move)
 
 
@@ -536,5 +527,50 @@ def main():
 
     pygame.quit()
     
-main()    
+
+def AIvsAI():
+    CHANGE_MINIMAX_DEPTH=4
+    MINIMAX_DEPTH=4
+
+    window = 0
+    is_running = True
+    game = Game(window)
+   
+    game.board.white_turn=True
+
+    while is_running:
+
+        if game.board.end():
+            is_running = False
+            #STUDENT CODE BEGIN
+            if(game.board.evaluate()>0):
+                print("White wins!")
+            if(game.board.evaluate()<0):
+                print("Blue wins!")
+            if(game.board.evaluate()==0):
+                print("It's a draw!")
+            #STUDENT CODE END
+            
+            break #przydalby sie jakiś komunikat kto wygrał zamiast break
+
+        if not game.board.white_turn:
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH)
+            if(type(move)==Move):
+                print("chosen move: ", move.piece.row, move.piece.col, "->", move.dest_row, move.dest_col, move.captures)
+                game.board.make_ai_move(move)
+            else:
+                continue
+
+
+        if game.board.white_turn:
+            move = minimax_a_b(deepcopy(game.board), CHANGE_MINIMAX_DEPTH)
+            if(type(move)==Move):
+                print("chosen move: ", move.piece.row, move.piece.col, "->", move.dest_row, move.dest_col, move.captures)
+                game.board.make_ai_move(move)
+            else:
+                continue
+
+
+
+AIvsAI()    
     
