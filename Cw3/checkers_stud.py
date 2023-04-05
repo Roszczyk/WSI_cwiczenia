@@ -21,7 +21,7 @@ from copy import deepcopy
 
 FPS = 20
 
-MINIMAX_DEPTH = 5
+MINIMAX_DEPTH = 7
 
 WIN_WIDTH = 500
 WIN_HEIGHT = 500
@@ -308,12 +308,12 @@ class Board:
                         if(self.board[row][col].is_king()==True):
                             h=h+KING_SCORE
                         else:
-                            h=h+PAWN_SCORE+row*row
+                            h=h+PAWN_SCORE
                     if(self.board[row][col].is_blue()==True):
                         if(self.board[row][col].is_king()==True):
                             h=h-KING_SCORE
                         else:
-                            h=h-PAWN_SCORE-row*row
+                            h=h-PAWN_SCORE
 
                 #STUDENT CODE END
         return h                        
@@ -536,8 +536,6 @@ def AIvsAI():
     is_running = True
     game = Game(window)
    
-    game.board.white_turn=True
-
     while is_running:
 
         if game.board.end():
@@ -572,5 +570,5 @@ def AIvsAI():
 
 
 
-AIvsAI()    
+main()    
     
