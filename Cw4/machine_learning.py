@@ -1,7 +1,6 @@
 import os
 import sys
-path_to_data=os.path.join(sys.path[0], "breast-cancer.data")
-file=open(path_to_data)
+import numpy as np
 
 class BreastCancerData:
     def __init__(self, array):
@@ -16,15 +15,34 @@ class BreastCancerData:
         self.breast_quad=array[8]
         self.irradiat=array[9]
 
-i=0
-dataArray=[]
-dataArrayNames=['class', 'age', 'menopause', 'tumor-size', 'inv-nodes', 'node-caps', 'deg-malig', 'breast', 'breast-quad', 'irradiat' ]
-file_text=file.read()
-file_lines=file_text.split("\n")
-for i in range(len(file_lines)-1):
-    file_line=file_lines[i]
-    line_array=file_line.split(",")
-    dataArray.append(BreastCancerData(line_array))
+def initFile():
+    path_to_data=os.path.join(sys.path[0], "breast-cancer.data")
+    file=open(path_to_data)
+    i=0
+    dataArray=[]
+    # dataArrayNames=['class', 'age', 'menopause', 'tumor-size', 'inv-nodes', 'node-caps', 'deg-malig', 'breast', 'breast-quad', 'irradiat' ]
+    file_text=file.read()
+    file_lines=file_text.split("\n")
+    for i in range(len(file_lines)-1):
+        file_line=file_lines[i]
+        line_array=file_line.split(",")
+        dataArray.append(BreastCancerData(line_array))
+    file.close()
+    return dataArray
 
-for i in range(len(dataArray)):
-    print(dataArray[i].breast)
+def divideData(data):
+    trainingData=[]
+    testingData=[]
+    for i in range(len(data)):
+        chooseSet=np.random.choice(2,1,p=[0.66,0.34])
+        if chooseSet==0:
+            trainingData.append(data[i])
+        if chooseSet==1:
+            testingData.append(data[i])
+    return trainingData, testingData
+
+dataArray=initFile()
+print(len(dataArray))
+dataArray, testingData = divideData(dataArray)
+print(len(dataArray))
+print(len(testingData))
