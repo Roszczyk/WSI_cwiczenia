@@ -30,11 +30,11 @@ def initFile():
     file.close()
     return dataArray
 
-def divideData(data):
+def divideData(data): #podział zbioru danych na dane trenujące i testowe
     trainingData=[]
     testingData=[]
     for i in range(len(data)):
-        chooseSet=np.random.choice(2,1,p=[0.66,0.34])
+        chooseSet=np.random.choice([0,1],1,p=[0.66,0.34])
         if chooseSet==0:
             trainingData.append(data[i])
         if chooseSet==1:
@@ -43,6 +43,9 @@ def divideData(data):
 
 dataArray=initFile()
 print(len(dataArray))
-dataArray, testingData = divideData(dataArray)
+dataArray, testingData = divideData(dataArray) 
 print(len(dataArray))
 print(len(testingData))
+
+for i in range(len(testingData)):
+    print(testingData[i].age)
