@@ -15,7 +15,9 @@ class BreastCancerData:
         self.breast_quad=array[8]
         self.irradiat=array[9]
 
-def initFile():
+###     PRZYGOTOWANIE DANYCH:       ###
+
+def initFile(): #odczytanie danych z pliku i stworzenie obiektów danych
     path_to_data=os.path.join(sys.path[0], "breast-cancer.data")
     file=open(path_to_data)
     i=0
@@ -41,11 +43,24 @@ def divideData(data): #podział zbioru danych na dane trenujące i testowe
             testingData.append(data[i])
     return trainingData, testingData
 
-dataArray=initFile()
-print(len(dataArray))
-dataArray, testingData = divideData(dataArray) 
-print(len(dataArray))
-print(len(testingData))
+###     BUDOWANIE DRZEWA:       ###
 
-for i in range(len(testingData)):
-    print(testingData[i].age)
+def divideByIrradiat(array):
+    dataIrradiat=[]
+    dataNonIrradiat=[]
+    dataUnknownIrradiat=[]
+    dividedData=[]
+    for i in range(len(array)):
+        if(array[i].irradiat=="yes"):
+            dataIrradiat.append(array[i])
+        if(array[i].irradiat=="no"):
+            dataNonIrradiat.append(array[i])
+        else:
+            dataUnknownIrradiat.append(array[i])
+    dividedData.append(dataIrradiat)
+    dividedData.append(dataNonIrradiat)
+    dividedData.append(dataUnknownIrradiat)
+    return dividedData
+    
+
+dataArray, testingData = divideData(initFile()) 
