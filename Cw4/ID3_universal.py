@@ -31,8 +31,6 @@ def divideData(data): #podział zbioru danych na dane trenujące i testowe
             testingData.append(data[i])
     return trainingData, testingData
 
-###     SPRAWDZANIE LICZNOŚCI:  ###
-
 def nameValues(data, checking):      #nazwanie elementów danej kategorii
     unique_list=[]
     for i in range(len(data)):
@@ -108,25 +106,20 @@ def recurrentID3(array,arrayEntropy, iterations, path=[]):
     if countEntropy(array)==0 or iterations==0:
         return path
     bestChoice=chooseBestPath(array, arrayEntropy, iterations)
-    print(countEntropy(array))
     arrayChildren=divideByChecked(array,bestChoice)
     path.append(bestChoice)
-    arrayWithoutBest=[]
     arrayChildrenCopy=arrayChildren
     for i in range(len(arrayChildren)):
         for j in range(len(arrayChildrenCopy[i])):
-            # print(arrayChildren[i][j], len(arrayChildren[i][j]))
             arrayChildrenCopy[i][j].pop(bestChoice)
-            # print(len(arrayWithoutBest))
-            # print(arrayChildren[i][j], len(arrayChildren[i][j]))
-            # print("_____NEXT______")
     paths=[]
     counts=[]
     for i in range(len(arrayChildrenCopy)):
         tempPath = recurrentID3(arrayChildrenCopy[i],countEntropy(arrayChildrenCopy[i]),iterations-1, path)
-        print(path)
+        # print(path)
         paths.append(tempPath)
         counts.append(len(tempPath))
+        print(counts)
     bestPath=np.array(counts).argmin()
     return paths[bestPath]
 
