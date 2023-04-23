@@ -18,6 +18,9 @@ def initFile(): #odczytanie danych z pliku i stworzenie obiektów danych
     file.close()
     return dataArray
 
+def log2(value):
+    return np.log(value)/np.log(2)
+
 def divideData(data): #podział zbioru danych na dane trenujące i testowe
     trainingData=[]
     testingData=[]
@@ -56,39 +59,50 @@ def divideByChecked(array, checking):
         partsLists.append(partsTemp)
     return partsLists
 
-def checkEntropy(array, checking): 
-    dividedArray=divideByChecked(array, checking)
+def countEntropy(array):
+    values=nameValues(array,0)
     count=[]
+    for i in range(len(values)):
+        countTemp=0
+        for j in range(len(array)):
+            if array[j][0]==values[i]:
+                countTemp=countTemp+1
+        count.append(countTemp)
+    sumValues=0
     entropy=0
+    for i in range(len(count)):
+        sumValues=sumValues+count[i]
+    for i in range(len(count)):
+        prob=count[i]/sumValues
+        entropy=entropy-prob*log2(prob)
+    return entropy
+
+def checkChildrenEntropy(array, checking): 
+    dividedArray=divideByChecked(array, checking)
+    entropy=[]
     for i in range(len(dividedArray)):
-        dividedByClassValue=divideByChecked(array,0)
-        for j in range(len(dividedByClassValue)):
-            count.append(len(dividedByClassValue[j]))
-        
+        entropy.append(countEntropy(dividedArray[i]))
+    return entropy
+
+def countInformationGain(parent, parentEntropy, checking):
+    ig=parentEntropy
+    children=divideByChecked(parent, checking)
+    childrenEntropyList=checkChildrenEntropy(parent, checking)
+    amount=[]
+    for i in range(len(children)):
+        amount.append(len(children[i]))
+    sum=0
+    for i in range(len(amount)):
+        sum=sum+amount[i]
+    for i in range(len(childrenEntropyList)):
+        ig=ig-(amount[i]/sum)*childrenEntropyList[i]
+    return ig
 
 
-        
 
-
-###     BUDOWANIE DRZEWA:       ###
-
-def divideByIrradiat(array):
-    dataIrradiat=[]
-    dataNonIrradiat=[]
-    dataUnknownIrradiat=[]
-    dividedData=[]
-    for i in range(len(array)):
-        if(array[i].irradiat=="yes"):
-            dataIrradiat.append(array[i])
-        if(array[i].irradiat=="no"):
-            dataNonIrradiat.append(array[i])
-        else:
-            dataUnknownIrradiat.append(array[i])
-    dividedData.append(dataIrradiat)
-    dividedData.append(dataNonIrradiat)
-    dividedData.append(dataUnknownIrradiat)
-    return dividedData
-    
 
 dataArray, testingData = divideData(initFile()) 
+dataEntropy=countEntropy(dataArray)
+print(dataEntropy)
+print(countInformationGain(dataArray,dataEntropy,0))
 
