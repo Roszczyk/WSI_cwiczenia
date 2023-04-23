@@ -3,12 +3,11 @@ import sys
 import numpy as np
 
 
-def initFile(): #odczytanie danych z pliku i stworzenie obiektów danych
-    path_to_data=os.path.join(sys.path[0], "breast-cancer.data")
+def initFile(fileName): #odczytanie danych z pliku i stworzenie obiektów danych
+    path_to_data=os.path.join(sys.path[0], fileName)
     file=open(path_to_data)
     i=0
     dataArray=[]
-    # dataArrayNames=['class', 'age', 'menopause', 'tumor-size', 'inv-nodes', 'node-caps', 'deg-malig', 'breast', 'breast-quad', 'irradiat' ]
     file_text=file.read()
     file_lines=file_text.split("\n")
     for i in range(len(file_lines)-1):
@@ -101,8 +100,10 @@ def countInformationGain(parent, parentEntropy, checking):
 
 
 
-dataArray, testingData = divideData(initFile()) 
+dataArray, testingData = divideData(initFile("breast-cancer.data")) 
 dataEntropy=countEntropy(dataArray)
-print(dataEntropy)
-print(countInformationGain(dataArray,dataEntropy,0))
+columns=len(dataArray[0])-1 #liczba kolumn bez klasy
+print("Entropy: ", dataEntropy)
+for i in range(columns):
+    print(countInformationGain(dataArray,dataEntropy,i+1))
 
