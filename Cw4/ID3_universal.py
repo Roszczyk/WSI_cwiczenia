@@ -97,13 +97,52 @@ def countInformationGain(parent, parentEntropy, checking):
         ig=ig-(amount[i]/sum)*childrenEntropyList[i]
     return ig
 
+def chooseBestPath(dataArray,dataEntropy,columns):
+    igList=[]
+    for i in range(columns):
+        igList.append(countInformationGain(dataArray,dataEntropy,i+1))
+    bestChoice=np.array(igList).argmax()+1
+    return bestChoice
 
+def recurrentID3(array,arrayEntropy, iterations, path=[]):
+    if countEntropy(array)==0 or iterations==0:
+        return path
+    bestChoice=chooseBestPath(array, arrayEntropy, iterations)
+    print(countEntropy(array))
+    arrayChildren=divideByChecked(array,bestChoice)
+    path.append(bestChoice)
+    arrayWithoutBest=[]
+    arrayChildrenCopy=arrayChildren
+    for i in range(len(arrayChildren)):
+        for j in range(len(arrayChildrenCopy[i])):
+            # print(arrayChildren[i][j], len(arrayChildren[i][j]))
+            arrayChildrenCopy[i][j].pop(bestChoice)
+            # print(len(arrayWithoutBest))
+            # print(arrayChildren[i][j], len(arrayChildren[i][j]))
+            # print("_____NEXT______")
+    paths=[]
+    counts=[]
+    for i in range(len(arrayChildrenCopy)):
+        tempPath = recurrentID3(arrayChildrenCopy[i],countEntropy(arrayChildrenCopy[i]),iterations-1, path)
+        print(path)
+        paths.append(tempPath)
+        counts.append(len(tempPath))
+    bestPath=np.array(counts).argmin()
+    return paths[bestPath]
+
+        
 
 
 dataArray, testingData = divideData(initFile("breast-cancer.data")) 
 dataEntropy=countEntropy(dataArray)
 columns=len(dataArray[0])-1 #liczba kolumn bez klasy
 print("Entropy: ", dataEntropy)
-for i in range(columns):
-    print(countInformationGain(dataArray,dataEntropy,i+1))
+bestChoice=chooseBestPath(dataArray,dataEntropy,columns)
+print("First: ", bestChoice)
+newArray=divideByChecked(dataArray, bestChoice)
+print("Len: ", len(newArray))
+
+print(recurrentID3(dataArray, dataEntropy, columns))
+
+
 
