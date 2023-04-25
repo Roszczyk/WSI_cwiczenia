@@ -105,9 +105,24 @@ def chooseBestPath(dataArray,dataEntropy,columns):
 def recurrentID3(array,arrayEntropy, iterations, path=[]):
     if iterations==0 or arrayEntropy==0:
         return path
-    bestChoice=chooseBestPath(array,arrayEntropy,iterations)
-    path.append(bestChoice)
-    childArray=divideByChecked(array, bestChoice)
+    else:
+        bestChoice=chooseBestPath(array,arrayEntropy,len(array[0])-1)
+        print("best: ", bestChoice)
+        path.append(bestChoice)
+        # print(bestChoice)
+        childArray=divideByChecked(array, bestChoice)
+        pathArray=[]
+        pathCount=[]
+        for i in range(len(array)):
+            array[i].pop(bestChoice)
+        for i in range(len(childArray)):
+            print(path)
+            pathTemp=recurrentID3(childArray[i], countEntropy(childArray[i]), iterations-1, path)
+            pathArray.append(pathTemp)
+            print("PathArray: ", pathArray)
+            pathCount.append(len(pathTemp))
+        print("best choice:", pathArray[np.array(pathCount).argmin()])
+        return pathArray[np.array(pathCount).argmin()]
 
 
 def defineClassSet(data):
@@ -123,7 +138,7 @@ def defineInputSet(data):
 
 dataArray, testingData = divideData(initFile("breast-cancer.data")) 
 # dataEntropy=countEntropy(dataArray)
-# columns=len(dataArray[0])-1 #liczba kolumn bez klasy
+columns=len(dataArray[0])-1 #liczba kolumn bez klasy
 # print("Entropy: ", dataEntropy)
 # bestChoice=chooseBestPath(dataArray,dataEntropy,columns)
 # print("First: ", bestChoice)
@@ -132,8 +147,7 @@ dataArray, testingData = divideData(initFile("breast-cancer.data"))
 
 # print(recurrentID3(dataArray, dataEntropy, columns))
 
-data=divideByChecked(dataArray, 4)
-print(recurrentID3(dataArray, countEntropy(dataArray), 3))
+recurrentID3(dataArray, countEntropy(dataArray), columns)
 
 
 
