@@ -103,39 +103,33 @@ def chooseBestPath(dataArray,dataEntropy,columns):
     return bestChoice
 
 def recurrentID3(array,arrayEntropy, iterations, path=[]):
-    if countEntropy(array)==0 or iterations==0:
-        return path
-    bestChoice=chooseBestPath(array, arrayEntropy, iterations)
-    arrayChildren=divideByChecked(array,bestChoice)
-    path.append(bestChoice)
-    arrayChildrenCopy=arrayChildren
-    for i in range(len(arrayChildren)):
-        for j in range(len(arrayChildrenCopy[i])):
-            arrayChildrenCopy[i][j].pop(bestChoice)
-    paths=[]
-    counts=[]
-    for i in range(len(arrayChildrenCopy)):
-        tempPath = recurrentID3(arrayChildrenCopy[i],countEntropy(arrayChildrenCopy[i]),iterations-1, path)
-        # print(path)
-        paths.append(tempPath)
-        counts.append(len(tempPath))
-        print(counts)
-    bestPath=np.array(counts).argmin()
-    return paths[bestPath]
+    #DO PRZEKMINIENIA
+    pass
 
+def defineClassSet(data):
+    return nameValues(data,0)
+
+def defineInputSet(data):
+    inputSet=[]
+    for i in range(len(data[0])-1):
+        inputSet.append(nameValues(data,i+1))
+    return inputSet
         
 
 
 dataArray, testingData = divideData(initFile("breast-cancer.data")) 
-dataEntropy=countEntropy(dataArray)
-columns=len(dataArray[0])-1 #liczba kolumn bez klasy
-print("Entropy: ", dataEntropy)
-bestChoice=chooseBestPath(dataArray,dataEntropy,columns)
-print("First: ", bestChoice)
-newArray=divideByChecked(dataArray, bestChoice)
-print("Len: ", len(newArray))
+# dataEntropy=countEntropy(dataArray)
+# columns=len(dataArray[0])-1 #liczba kolumn bez klasy
+# print("Entropy: ", dataEntropy)
+# bestChoice=chooseBestPath(dataArray,dataEntropy,columns)
+# print("First: ", bestChoice)
+# newArray=divideByChecked(dataArray, bestChoice)
+# print("Len: ", len(newArray))
 
-print(recurrentID3(dataArray, dataEntropy, columns))
+# print(recurrentID3(dataArray, dataEntropy, columns))
+
+print(defineClassSet(dataArray))
+print(defineInputSet(dataArray))
 
 
 
