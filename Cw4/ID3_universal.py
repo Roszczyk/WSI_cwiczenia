@@ -103,8 +103,12 @@ def chooseBestPath(dataArray,dataEntropy,columns):
     return bestChoice
 
 def recurrentID3(array,arrayEntropy, iterations, path=[]):
-    #DO PRZEKMINIENIA
-    pass
+    if iterations==0 or arrayEntropy==0:
+        return path
+    bestChoice=chooseBestPath(array,arrayEntropy,iterations)
+    path.append(bestChoice)
+    childArray=divideByChecked(array, bestChoice)
+
 
 def defineClassSet(data):
     return nameValues(data,0)
@@ -128,8 +132,8 @@ dataArray, testingData = divideData(initFile("breast-cancer.data"))
 
 # print(recurrentID3(dataArray, dataEntropy, columns))
 
-print(defineClassSet(dataArray))
-print(defineInputSet(dataArray))
+data=divideByChecked(dataArray, 4)
+print(recurrentID3(dataArray, countEntropy(dataArray), 3))
 
 
 
