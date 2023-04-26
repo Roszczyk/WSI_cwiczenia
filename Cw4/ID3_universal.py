@@ -99,33 +99,52 @@ def chooseBestPath(dataArray,dataEntropy,columns):
     igList=[]
     for i in range(columns):
         igList.append(countInformationGain(dataArray,dataEntropy,i+1))
-    bestChoice=np.array(igList).argmax()+1
+    if len(igList)==0:
+        bestChoice=None
+    else:
+        bestChoice=np.array(igList).argmax()+1
     return bestChoice
 
-def recurrentID3(array,arrayEntropy, iterations, path=[]):
-    if iterations==0 or arrayEntropy==0:
-        return path
+def recurrentID3(array, array_entropy, columns, depth=0):
+    if len(array)==0 or array_entropy == 0:
+        return None
     else:
-        bestChoice=chooseBestPath(array,arrayEntropy,len(array[0])-1)
-        print("best: ", bestChoice)
-        path.append(bestChoice)
-        # print(bestChoice)
-        childArray=divideByChecked(array, bestChoice)
-        pathArray=[]
-        pathCount=[]
+        best_choice = chooseBestPath(array, array_entropy, columns)
+        if best_choice==None:
+            return None
+        child_arrays = divideByChecked(array, best_choice)
+        
         for i in range(len(array)):
-            array[i].pop(bestChoice)
-        for i in range(len(childArray)):
-            print(path)
-            pathTemp=recurrentID3(childArray[i], countEntropy(childArray[i]), iterations-1, path)
-            pathArray.append(pathTemp)
-            print("PathArray: ", pathArray)
-            pathCount.append(len(pathTemp))
-        print("best choice:", pathArray[np.array(pathCount).argmin()])
-        return pathArray[np.array(pathCount).argmin()]
+            array[i].pop(best_choice)
+        
+        children = []
+        for i in range(len(child_arrays)):
+            child_entropy = countEntropy(child_arrays[i])
+            child = recurrentID3(child_arrays[i], child_entropy, columns - 1, depth + 1)
+            children.append(child)
+
+        tree = {
+            "attribute": best_choice,
+            "children": children
+        }
+        return tree
     
-def predict(data, path, iteration):
-    pass
+def predict(data, tree, inputSet):
+    if not tree:
+        return None
+    attribute = tree["attribute"]
+    attribute_value = data[attribute - 1]
+    if attribute_value not in inputSet[attribute - 1]:
+        return None
+    index = inputSet[attribute - 1].index(attribute_value)
+    subtree = tree["children"][index]
+    if not subtree:
+        return None
+    if "class" in subtree:
+        return subtree["class"]
+    else:
+        return predict(data, subtree, inputSet)
+
 
 
 def defineClassSet(data):
@@ -139,18 +158,24 @@ def defineInputSet(data):
         
 
 
-dataArray, testingData = divideData(initFile("breast-cancer.data")) 
-# dataEntropy=countEntropy(dataArray)
-columns=len(dataArray[0])-1 #liczba kolumn bez klasy
-# print("Entropy: ", dataEntropy)
-# bestChoice=chooseBestPath(dataArray,dataEntropy,columns)
-# print("First: ", bestChoice)
-# newArray=divideByChecked(dataArray, bestChoice)
-# print("Len: ", len(newArray))
+dataArray, testingData = divideData(initFile("breast-cancer.data"))
+columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
 
-# print(recurrentID3(dataArray, dataEntropy, columns))
+input_set = defineInputSet(dataArray)
+tree = recurrentID3(dataArray, countEntropy(dataArray), columns-1)
+print(tree)
 
-recurrentID3(dataArray, countEntropy(dataArray), columns)
+correct_predictions = 0
+for test_data in testingData:
+    actual_class = test_data[0]
+    predicted_class = predict(test_data, tree, input_set)
+    print("actual:    ", actual_class)
+    print("predicted: ", predicted_class)
+    if actual_class == predicted_class:
+        correct_predictions += 1
+
+accuracy = correct_predictions / len(testingData)
+print("Accuracy:", accuracy)
 
 
 
