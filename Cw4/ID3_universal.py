@@ -24,7 +24,7 @@ def divideData(data): #podział zbioru danych na dane trenujące i testowe
     trainingData=[]
     testingData=[]
     for i in range(len(data)):
-        chooseSet=np.random.choice([0,1],1,p=[0.66,0.34])
+        chooseSet=np.random.choice([0,1],1,p=[0.6,0.4])
         if chooseSet==0:
             trainingData.append(data[i])
         if chooseSet==1:
@@ -123,6 +123,9 @@ def recurrentID3(array,arrayEntropy, iterations, path=[]):
             pathCount.append(len(pathTemp))
         print("best choice:", pathArray[np.array(pathCount).argmin()])
         return pathArray[np.array(pathCount).argmin()]
+    
+def predict(data, path, iteration):
+    pass
 
 
 def defineClassSet(data):
