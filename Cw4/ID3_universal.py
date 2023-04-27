@@ -183,7 +183,7 @@ def defineInputSet(data):
         
 
 
-dataArray, testingData = divideData(initFile("breast-cancer.data"))
+dataArray, testingData = divideData(initFile("agaricus-lepiota.data"))
 columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
 
 tree=recurrentID3(dataArray, countEntropy(dataArray), len(dataArray[0])-1)
