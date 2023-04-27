@@ -1,7 +1,14 @@
 import os
 import sys
 import numpy as np
+import copy
 
+class Tree:
+    def __init__(self, choice,choiceValue, children, Class=None):
+        self.choice=choice
+        self.choiceValue=choiceValue
+        self.children=children
+        self.Class=Class
 
 def initFile(fileName): #odczytanie danych z pliku i stworzenie obiektów danych
     path_to_data=os.path.join(sys.path[0], fileName)
@@ -19,6 +26,16 @@ def initFile(fileName): #odczytanie danych z pliku i stworzenie obiektów danych
 
 def log2(value):
     return np.log(value)/np.log(2)
+
+def most_frequent(List): #kod skopiowany od GeeksForGeeks
+    counter = 0
+    num = List[0]
+    for i in List:
+        curr_frequency = List.count(i)
+        if(curr_frequency> counter):
+            counter = curr_frequency
+            num = i
+    return num
 
 def divideData(data): #podział zbioru danych na dane trenujące i testowe
     trainingData=[]
@@ -105,45 +122,40 @@ def chooseBestPath(dataArray,dataEntropy,columns):
         bestChoice=np.array(igList).argmax()+1
     return bestChoice
 
-def recurrentID3(array, array_entropy, columns, depth=0):
-    if len(array)==0 or array_entropy == 0:
-        return None
-    else:
-        best_choice = chooseBestPath(array, array_entropy, columns)
-        if best_choice==None:
-            return None
-        child_arrays = divideByChecked(array, best_choice)
-        
-        for i in range(len(array)):
-            array[i].pop(best_choice)
-        
-        children = []
-        for i in range(len(child_arrays)):
-            child_entropy = countEntropy(child_arrays[i])
-            child = recurrentID3(child_arrays[i], child_entropy, columns - 1, depth + 1)
-            children.append(child)
-
-        tree = {
-            "attribute": best_choice,
-            "children": children
-        }
-        return tree
+def recurrentID3(array, arrayEntropy, columns):
+    if len(array[0])==1:
+        classValues=nameValues(array,0)
+        print("classValues: ", classValues)
+        print("arrayValues: ", array[0])
+        if len(classValues)==1:
+            classValue=classValues[0]
+        else:
+            count=[]
+            for i in range(len(array)):
+                countTemp=0
+                for j in range(len(classValues)):
+                    if array[i][0]==classValues[j]:
+                        countTemp=countTemp+1
+                count.append(countTemp)
+            classValue=classValues[np.array(count).argmax()]
+        return [Tree(None, None, None, classValue)]
+    if len(array[0])>1:
+        bestChoice=chooseBestPath(array, arrayEntropy, columns)
+        children=divideByChecked(array, bestChoice)
+        listOfSubtrees=[]
+        for i in range(len(children)):
+            tempArray=copy.deepcopy(children[i])
+            for j in range(len(tempArray)):
+                tempArray[j].pop(bestChoice)
+            # print("tempArray: ", tempArray[0])
+            # print("childArray: ", children[i][0])
+            tree=Tree(bestChoice, children[i][0][bestChoice], recurrentID3(tempArray, countEntropy(tempArray), len(tempArray[0])-1), None)
+            listOfSubtrees.append(tree)
+        return listOfSubtrees
+            
     
 def predict(data, tree, inputSet):
-    if not tree:
-        return None
-    attribute = tree["attribute"]
-    attribute_value = data[attribute - 1]
-    if attribute_value not in inputSet[attribute - 1]:
-        return None
-    index = inputSet[attribute - 1].index(attribute_value)
-    subtree = tree["children"][index]
-    if not subtree:
-        return None
-    if "class" in subtree:
-        return subtree["class"]
-    else:
-        return predict(data, subtree, inputSet)
+    pass
 
 
 
@@ -161,21 +173,7 @@ def defineInputSet(data):
 dataArray, testingData = divideData(initFile("breast-cancer.data"))
 columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
 
-input_set = defineInputSet(dataArray)
-tree = recurrentID3(dataArray, countEntropy(dataArray), columns-1)
-print(tree)
-
-correct_predictions = 0
-for test_data in testingData:
-    actual_class = test_data[0]
-    predicted_class = predict(test_data, tree, input_set)
-    print("actual:    ", actual_class)
-    print("predicted: ", predicted_class)
-    if actual_class == predicted_class:
-        correct_predictions += 1
-
-accuracy = correct_predictions / len(testingData)
-print("Accuracy:", accuracy)
+print(recurrentID3(dataArray, countEntropy(dataArray), len(dataArray[0])-1))
 
 
 
