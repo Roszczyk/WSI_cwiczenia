@@ -152,7 +152,7 @@ def recurrentID3(array, arrayEntropy, columns):
     
 def predict(data, tree):
     if tree[0].Class != None:
-        print(tree[0].Class)
+        # print(tree[0].Class)
         return tree[0].Class
     choice=tree[0].choice
     tempArray=copy.deepcopy(data)
@@ -163,6 +163,10 @@ def predict(data, tree):
             result=predict(tempArray, tree[i].children)
             return result
         setOfOptions.append(tree[i])
+    # print("---------------------------------------------")
+    # print(data[choice])
+    # for i in range(len(setOfOptions)):
+    #     print(setOfOptions[i].choiceValue)
     result = predict(tempArray, np.random.choice(setOfOptions, 1)[0].children) #rozwiązanie tymczasowe, bo nie wiem co jest nie tak
     return result
 
@@ -191,7 +195,7 @@ countTrue=0
 
 for i in range(countTestingData):
     predicted=predict(testingData[i], tree)
-    print(predicted," - ", testingData[i][0])
+    # print(predicted," - ", testingData[i][0])
     if predicted==testingData[i][0]:
         countTrue=countTrue+1
 
