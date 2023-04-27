@@ -125,8 +125,6 @@ def chooseBestPath(dataArray,dataEntropy,columns):
 def recurrentID3(array, arrayEntropy, columns):
     if len(array[0])==1:
         classValues=nameValues(array,0)
-        print("classValues: ", classValues)
-        print("arrayValues: ", array[0])
         if len(classValues)==1:
             classValue=classValues[0]
         else:
@@ -147,15 +145,24 @@ def recurrentID3(array, arrayEntropy, columns):
             tempArray=copy.deepcopy(children[i])
             for j in range(len(tempArray)):
                 tempArray[j].pop(bestChoice)
-            # print("tempArray: ", tempArray[0])
-            # print("childArray: ", children[i][0])
             tree=Tree(bestChoice, children[i][0][bestChoice], recurrentID3(tempArray, countEntropy(tempArray), len(tempArray[0])-1), None)
             listOfSubtrees.append(tree)
         return listOfSubtrees
             
     
-def predict(data, tree, inputSet):
-    pass
+def predict(data, tree):
+    print(data, len(data))
+    if len(data)==1:
+        print("jestem tu")
+        return data[0]
+    choice=tree[0].choice
+    print(choice)
+    tempArray=copy.deepcopy(data)
+    tempArray.pop(choice)
+    for i in range(len(tree)):
+        if tree[i].choiceValue==data[choice]:
+            result=predict(tempArray, tree[i].children)
+            return result
 
 
 
@@ -173,7 +180,9 @@ def defineInputSet(data):
 dataArray, testingData = divideData(initFile("breast-cancer.data"))
 columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
 
-print(recurrentID3(dataArray, countEntropy(dataArray), len(dataArray[0])-1))
+tree=recurrentID3(dataArray, countEntropy(dataArray), len(dataArray[0])-1)
+
+print(predict(testingData[3], tree))
 
 
 
