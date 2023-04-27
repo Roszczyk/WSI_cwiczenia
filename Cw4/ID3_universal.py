@@ -151,12 +151,9 @@ def recurrentID3(array, arrayEntropy, columns):
             
     
 def predict(data, tree):
-    print(data, len(data))
-    if len(data)==1:
-        print("jestem tu")
-        return data[0]
+    if tree[0].Class != None:
+        return tree[0].Class
     choice=tree[0].choice
-    print(choice)
     tempArray=copy.deepcopy(data)
     tempArray.pop(choice)
     for i in range(len(tree)):
@@ -182,7 +179,19 @@ columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
 
 tree=recurrentID3(dataArray, countEntropy(dataArray), len(dataArray[0])-1)
 
-print(predict(testingData[3], tree))
+# print(predict(testingData[3], tree))
 
+countTestingData=len(testingData)
+countTrue=0
+
+for i in range(countTestingData):
+    predicted=predict(testingData[i], tree)
+    print(predicted," - ", testingData[i][0])
+    if predicted==testingData[i][0]:
+        countTrue=countTrue+1
+
+accuracy=countTrue/countTestingData
+
+print("accuracy: ", accuracy)
 
 
