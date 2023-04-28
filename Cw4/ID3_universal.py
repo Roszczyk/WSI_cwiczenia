@@ -170,8 +170,6 @@ def predict(data, tree):
     result = predict(tempArray, np.random.choice(setOfOptions, 1)[0].children) #rozwiązanie tymczasowe, bo nie wiem co jest nie tak
     return result
 
-
-
 def defineClassSet(data):
     return nameValues(data,0)
 
@@ -180,27 +178,74 @@ def defineInputSet(data):
     for i in range(len(data[0])-1):
         inputSet.append(nameValues(data,i+1))
     return inputSet
-        
 
+def toCountAverageAccuracy():
+    sumAccuracy=0
+    iterations=25
+    for i in range(iterations):
 
-dataArray, testingData = divideData(initFile("agaricus-lepiota.data"))
-columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
+        dataArray, testingData = divideData(initFile("agaricus-lepiota.data"))
+        columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
 
-tree=recurrentID3(dataArray, countEntropy(dataArray), len(dataArray[0])-1)
+        tree=recurrentID3(dataArray, countEntropy(dataArray), columns)
 
-# print(predict(testingData[3], tree))
+        # print(predict(testingData[3], tree))
 
-countTestingData=len(testingData)
-countTrue=0
+        countTestingData=len(testingData)
+        countTrue=0
 
-for i in range(countTestingData):
-    predicted=predict(testingData[i], tree)
-    # print(predicted," - ", testingData[i][0])
-    if predicted==testingData[i][0]:
-        countTrue=countTrue+1
+        for i in range(countTestingData):
+            predicted=predict(testingData[i], tree)
+            # print(predicted," - ", testingData[i][0])
+            if predicted==testingData[i][0]:
+                countTrue=countTrue+1
 
-accuracy=countTrue/countTestingData
+        accuracy=countTrue/countTestingData
 
-print("accuracy: ", accuracy)
+        print("accuracy: ", accuracy)
 
+        sumAccuracy=accuracy+sumAccuracy
 
+    print("averageAccuracy: ", sumAccuracy/iterations)
+
+def toFindConfusionMatrix():
+    dataArray, testingData = divideData(initFile("breast-cancer.data"))
+    columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
+
+    tree=recurrentID3(dataArray, countEntropy(dataArray), columns)
+
+    countTestingData=len(testingData)
+    countTrue=0
+    classSet=defineClassSet(testingData)
+    matrix=[0,0,0,0]
+
+    for i in range(countTestingData):
+        predicted=predict(testingData[i], tree)
+        if predicted==classSet[0] and testingData[i][0]==classSet[0]:
+            matrix[0]=matrix[0]+1
+        if predicted==classSet[0] and testingData[i][0]==classSet[1]:
+            matrix[1]=matrix[1]+1
+        if predicted==classSet[1] and testingData[i][0]==classSet[1]:
+            matrix[2]=matrix[2]+1
+        if predicted==classSet[1] and testingData[i][0]==classSet[0]:
+            matrix[3]=matrix[3]+1
+
+    print(f"|accurate/predicted |{classSet[0]}    |   {classSet[1]}       |")
+    print(f"{classSet[0]}     |{matrix[0]}    |   {matrix[3]}     |")
+    print(f"{classSet[1]}     |{matrix[1]}    |   {matrix[2]}     |")
+
+def main():
+    dataArray, testingData = divideData(initFile("agaricus-lepiota.data"))
+    columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
+    tree=recurrentID3(dataArray, countEntropy(dataArray), columns)
+    countTestingData=len(testingData)
+    countTrue=0
+    for i in range(countTestingData):
+        predicted=predict(testingData[i], tree)
+        # print(predicted," - ", testingData[i][0])
+        if predicted==testingData[i][0]:
+            countTrue=countTrue+1
+    accuracy=countTrue/countTestingData
+    print("accuracy: ", accuracy)
+
+main()
