@@ -1,0 +1,4 @@
+Ćwiczenie 5 (Sztuczne Sieci Neuronowe) jest ćwiczeniem grupowym wykonanym w składzie:
+Iga Bernat
+Mikołaj Roszczyk
+Kod jest tworzony z wykorzystaniem repozytorium gitlab: https://gitlab-stud.elka.pw.edu.pl/mroszczy/wsi_cw5
