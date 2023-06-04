@@ -86,15 +86,19 @@ def experiment():
                     action = np.random.choice(max_actions)
 
                 observation, reward, end, truncated, info = env.step(action) #end=termination (if termination is True then end is True)
+                # if(end == True and reward == 0):
+                #     reward = -0.5
+                # if(state==observation):
+                #     reward=-0.25
+
+                # if(end==True and reward==1):
+                #     reward==(episode_max_time-cur_episode_time)/200
 
                 if(observation==SUCCESS_POSITION):
                     num_of_succeses+=1
                 
                 delta=reward + gamma * np.max(qtable[observation]) - qtable[state, action]
                 qtable[state, action] = qtable[state, action] + beta * delta
-
-                if(state==observation and end!=True):
-                    reward=-0.25
 
                 state=observation
 
