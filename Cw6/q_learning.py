@@ -91,8 +91,8 @@ def experiment():
                 # if(state==observation):
                 #     reward=-0.25
 
-                # if(end==True and reward==1):
-                #     reward==(episode_max_time-cur_episode_time)/200
+                if(end==True and reward==1):
+                    reward==cur_episode_time/200
 
                 if(observation==SUCCESS_POSITION):
                     num_of_succeses+=1
