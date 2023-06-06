@@ -3,13 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #inicjalizacja środowiska:
-env = gym.make('FrozenLake-v1', desc=None, map_name="8x8", is_slippery=False)
+env = gym.make('FrozenLake-v1', desc=None, map_name="8x8", is_slippery=True)
 state_size = env.observation_space.n
 action_size = env.action_space.n
 
 #paramtetry czasowe:
 num_of_ind_runs = 25
-num_episodes = 1000
+num_episodes = 10000
 episode_max_time=200
 
 #stan absorbujący:
@@ -87,12 +87,12 @@ def experiment():
 
                 observation, reward, end, truncated, info = env.step(action) #end=termination (if termination is True then end is True)
                 # if(end == True and reward == 0):
-                #     reward = -0.5
-                # if(state==observation):
-                #     reward=-0.25
+                #     reward = -0.25
+                if(state==observation):
+                    reward=-0.25
 
-                if(end==True and reward==1):
-                    reward==cur_episode_time/200
+                # if(end==True and reward==1):
+                #     reward==cur_episode_time/200
 
                 if(observation==SUCCESS_POSITION):
                     num_of_succeses+=1
@@ -115,8 +115,8 @@ def experiment():
     return averaged_reward
 
 
-averaged_reward_base = base() #niech to będą wyniki bazowe, z którymi będziemy porównywać wyniki dla innych ustawień, czy funkcji oceny
-averaged_reward=experiment()
+averaged_reward = base() #niech to będą wyniki bazowe, z którymi będziemy porównywać wyniki dla innych ustawień, czy funkcji oceny
+averaged_reward_base=experiment()
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
