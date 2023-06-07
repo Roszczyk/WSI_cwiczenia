@@ -2,13 +2,21 @@ import numpy as np
 import os
 import sys
 
+def findNode(name, list_of_nodes):
+    if name=='none':
+        return None
+    for i in range(len(list_of_nodes)):
+        if list_of_nodes[i].name==name:
+            return list_of_nodes[i]
+    return None
+
 class Node:
     def __init__(self, data):
         self.name=data[0][0]
-        self.behind=data[1]
+        self.behind=findNode(data[1], nodes)
         self.true=data[2]
         self.false=data[3]
-        self.forward=data[4]
+        self.forward=findNode(data[4], nodes)
 
 
 def initFile(fileName): #odczytanie danych z pliku i stworzenie obiektów danych
@@ -32,4 +40,5 @@ def initFile(fileName): #odczytanie danych z pliku i stworzenie obiektów danych
 data = initFile("data.txt")
 nodes=[]
 for i in range(len(data)-1):
-    nodes.append(Node(data[i+1]))
+    nodes.append(Node(data[i+2]))
+    print(nodes[i].behind)
