@@ -14,6 +14,13 @@ def findClass(data):
     for i in range(len(data)):
         if data[i].forward[0]=='none':
             return data[i]
+        
+def classFirstInDataline(dataline):
+    good=[]
+    good.append(dataline[len(dataline)-1])
+    for i in range(len(dataline)-1):
+        good.append(dataline[i])
+    return good
 
 def initFile(fileName): #odczytanie danych z pliku i stworzenie obiektów danych
     path_to_data=os.path.join(sys.path[0], fileName)
@@ -49,14 +56,13 @@ class Atribute:
 def recurrentBayes(node):
     if node.behind[0]=='none':
         value=np.random.choice([True, False], p=[node.true[0], node.false[0]])
+        dataline.append(value)
         return value
     else:
         values=[]
         for i in range(len(node.behind)):
             values.append(recurrentBayes(findNode(node.behind[i], nodes)))
-        valueIndex=[]
-        for i in range(2**len(values)):
-            valueIndex.append(i)
+        valueIndex=[i for i in range(2**len(values))]
         for i in range(len(values)):
             if values[i]==True:
                 for j in range(int(len(valueIndex)/2)):
@@ -65,6 +71,7 @@ def recurrentBayes(node):
                 for j in range(int(len(valueIndex)/2)):
                     valueIndex.pop(0)
         value=np.random.choice([True, False], p=[node.true[valueIndex[0]], node.false[valueIndex[0]]])
+        dataline.append(value)
         return value
 
 data, amount = initFile("data.txt")
@@ -73,13 +80,10 @@ nodes=[]
 for i in range(len(data)):
     nodes.append(Atribute(data[i]))
 
-for i in range(amount):
-    dataline=[]
-    recurrentBayes(findClass(nodes))
-
-print(recurrentBayes(findClass(nodes)))
-
 savefile=open(os.path.join(sys.path[0], "dataforID3.txt"), "w")
 
-
-    
+for i in range(amount):
+    dataline=[]
+    value=recurrentBayes(findClass(nodes))
+    dataline=classFirstInDataline(dataline)
+    savefile.write((f"{dataline[0]},{dataline[1]},{dataline[2]},{dataline[3]}\n"))
