@@ -246,4 +246,4 @@ def main():
     accuracy=countTrue/countTestingData
     print("accuracy: ", accuracy)
 
-main()
+toCountAverageAccuracy()

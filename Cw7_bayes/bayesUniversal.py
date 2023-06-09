@@ -86,4 +86,4 @@ for i in range(amount):
     dataline=[]
     value=recurrentBayes(findClass(nodes))
     dataline=classFirstInDataline(dataline)
-    savefile.write((f"{dataline[0]},{dataline[1]},{dataline[2]},{dataline[3]}\n"))
+    savefile.write((f"{dataline[0]},{dataline[1]},{dataline[2]}\n"))
