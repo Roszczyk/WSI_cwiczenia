@@ -10,6 +10,18 @@ def findNode(name, list_of_nodes):
             return list_of_nodes[i]
     return None
 
+def findInputs(data):
+    inputs=[]
+    for i in range(len(data)):
+        if data[i].behind[0]=='none':
+            inputs.append(data[i])
+    return inputs
+
+def findClass(data):
+    for i in range(len(data)):
+        if data[i].forward[0]=='none':
+            return data[i]
+
 class Atribute:
     def __init__(self, data):
         self.name=data[0][0]
@@ -79,7 +91,7 @@ headlines=data.pop(0)
 nodes=[]
 for i in range(len(data)):
     nodes.append(Atribute(data[i]))
-inputs=[nodes[0], nodes[1]]
+inputs=findInputs(nodes)
 
 
 savefile=open(os.path.join(sys.path[0], "dataforID3.txt"), "w")
