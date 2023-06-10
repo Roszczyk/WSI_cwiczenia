@@ -1,4 +1,4 @@
-100
+500
 name,behind,true,false,forward
 chair,none,0.8,0.2,back
 sport,none,0.02,0.98,back

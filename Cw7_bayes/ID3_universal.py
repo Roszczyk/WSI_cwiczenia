@@ -187,8 +187,6 @@ def toCountAverageAccuracy():
 
         tree=recurrentID3(dataArray, countEntropy(dataArray), columns)
 
-        # print(predict(testingData[3], tree))
-
         countTestingData=len(testingData)
         countTrue=0
 
