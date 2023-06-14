@@ -74,7 +74,7 @@ def recurrentBayes(node):
         dataline.append(value)
         return value
 
-data, amount = initFile("data.txt")
+data, amount = initFile("siec.txt")
 headlines=data.pop(0)
 nodes=[]
 for i in range(len(data)):
