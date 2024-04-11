@@ -10,10 +10,10 @@ CHOSEN_METHOD = METHODS_LIST[0]
 
 class Tree:
     def __init__(self, choice,choiceValue, children, Class=None):
-        self.choice=choice
-        self.choiceValue=choiceValue
-        self.children=children
-        self.Class=Class
+        self.choice=choice              #atrybut, po którym dokonujemy wyboru
+        self.choiceValue=choiceValue    #lista klas danego atrybutu
+        self.children=children          #poddrzewa
+        self.Class=Class                #nie None tylko jeśli to jest liść - wtedy klasa
 
 def log2(value):
     return np.log(value)/np.log(2)
