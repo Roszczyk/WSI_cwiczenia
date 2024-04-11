@@ -5,7 +5,8 @@ import copy
 
 from library import initFile
 
-CHOSEN_METHOD = "entropy"
+METHODS_LIST = ["entropy", "gini"]
+CHOSEN_METHOD = METHODS_LIST[0]
 
 class Tree:
     def __init__(self, choice,choiceValue, children, Class=None):
