@@ -23,10 +23,10 @@ def most_frequent(List): #wskazanie najczęstszego elementu w liście
     num = List[0]
     for i in set(List):
         curr_frequency = List.count(i)
-        if(curr_frequency> counter):
+        if(curr_frequency > counter):
             counter = curr_frequency
-            num = i
-    return num
+            current_best = i
+    return current_best
 
 def divideData(data, train_prob = 0.8): #podział zbioru danych na dane trenujące i testowe
     trainingData=[]
@@ -39,18 +39,11 @@ def divideData(data, train_prob = 0.8): #podział zbioru danych na dane trenują
             testingData.append(data[i])
     return trainingData, testingData
 
-def nameValues(data, checking):      #nazwanie elementów danej kategorii
+def nameValues(data, checking):      #nazwanie klas danego atrybutu
     unique_list=[]
     for i in range(len(data)):
         if data[i][checking] not in unique_list:
             unique_list.append(data[i][checking])
-    return unique_list
-
-def unique(list):   #wskazuje liste unikalnych wartości w liście
-    unique_list = []
-    for x in list:
-        if x not in unique_list:
-            unique_list.append(x)
     return unique_list
 
 def divideByChecked(array, checking):   #dzieli dane względem wybranego atrybutu
@@ -109,8 +102,6 @@ def countInformationGain(parent, parentEntropy, checking, method="entropy"):  #l
     amount=[]
     for child in children:
         amount.append(len(child))
-    # for i in range(len(amount)):
-    #     sum=sum+amount[i]
     sum_amount = sum(amount)
     for i in range(len(childrenEntropyList)):
         ig=ig-(amount[i]/sum_amount)*childrenEntropyList[i]
@@ -180,26 +171,6 @@ def accuracy(tree, testData):
         if predicted==data[0]:
             countTrue=countTrue+1
     return countTrue / len(testData)
-
-def confusion_matrix(tree, testingData):
-    countTestingData=len(testingData)
-    classSet=defineClassSet(testingData)
-    matrix=[0,0,0,0]
-
-    for i in range(countTestingData):
-        predicted=predict(testingData[i], tree)
-        if predicted==classSet[0] and testingData[i][0]==classSet[0]:
-            matrix[0]=matrix[0]+1
-        if predicted==classSet[0] and testingData[i][0]==classSet[1]:
-            matrix[1]=matrix[1]+1
-        if predicted==classSet[1] and testingData[i][0]==classSet[1]:
-            matrix[2]=matrix[2]+1
-        if predicted==classSet[1] and testingData[i][0]==classSet[0]:
-            matrix[3]=matrix[3]+1
-
-    print(f"|accurate/predicted |{classSet[0]}    |   {classSet[1]}       |")
-    print(f"{classSet[0]}     |{matrix[0]}    |   {matrix[3]}     |")
-    print(f"{classSet[1]}     |{matrix[1]}    |   {matrix[2]}     |")
 
 def build_tree(dataArray):
     columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy

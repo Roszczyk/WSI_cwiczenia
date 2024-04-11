@@ -41,7 +41,7 @@ def divideData(data): #podział zbioru danych na dane trenujące i testowe
     trainingData=[]
     testingData=[]
     for i in range(len(data)):
-        chooseSet=np.random.choice([0,1],1,p=[0.6,0.4])
+        chooseSet=np.random.choice([0,1],1,p=[0.8,0.2])
         if chooseSet==0:
             trainingData.append(data[i])
         if chooseSet==1:
@@ -231,9 +231,12 @@ def toFindConfusionMatrix():
     print(f"{classSet[1]}     |{matrix[1]}    |   {matrix[2]}     |")
 
 def main():
-    dataArray, testingData = divideData(initFile("agaricus-lepiota.data"))
+    dataArray, testingData = divideData(initFile("breast-cancer.data"))
     columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
     tree=recurrentID3(dataArray, countEntropy(dataArray), columns)
+    return tree
+
+def checkAccuracy(testingData, tree):
     countTestingData=len(testingData)
     countTrue=0
     for i in range(countTestingData):
@@ -244,4 +247,7 @@ def main():
     accuracy=countTrue/countTestingData
     print("accuracy: ", accuracy)
 
-toFindConfusionMatrix()
+
+# main()
+# toCountAverageAccuracy()
+checkAccuracy(main())
