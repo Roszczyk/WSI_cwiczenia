@@ -57,6 +57,12 @@ def divideByChecked(array, checking):   #dzieli dane względem wybranego atrybut
         partsLists.append(partsTemp)
     return partsLists
 
+def count_entropy_or_gini(array, chosen_method="entropy"):
+    if chosen_method == "entropy":
+        return countEntropy(array)
+    if chosen_method == "gini":
+        return countGini(array)
+
 def countEntropy(array):        #liczenie entropii względem danego atrybutu
     values=nameValues(array,0)
     count=[]
@@ -78,27 +84,17 @@ def countEntropy(array):        #liczenie entropii względem danego atrybutu
 def countGini(array):
     pass
 
-def checkChildrenEntropy(array, checking):      #sprawdzenie entropii względem dzieci
+def checkChildrenEntropy(array, checking, chosen_method = "entropy"):      #sprawdzenie entropii względem dzieci
     dividedArray=divideByChecked(array, checking)
     entropy=[]
     for partial_array in dividedArray:
-        entropy.append(countEntropy(partial_array))
+        entropy.append(count_entropy_or_gini(partial_array, chosen_method))
     return entropy
-
-def checkChildrenGini(array, checking):         #sprawdzanie wskaźnika Giniego względem dzieci
-    dividedArray=divideByChecked(array,checking)
-    gini_indexes = []
-    for partial_array in dividedArray:
-        gini_indexes.append(countGini(partial_array))
-    return gini_indexes
 
 def countInformationGain(parent, parentEntropy, checking, method="entropy"):  #liczenie zysku informacyjnego
     ig=parentEntropy
     children=divideByChecked(parent, checking)
-    if method == "entropy":
-        childrenEntropyList=checkChildrenEntropy(parent, checking)
-    if method == "gini":
-        childrenEntropyList = checkChildrenGini(parent, checking)
+    childrenEntropyList=checkChildrenEntropy(parent, checking, method)
     amount=[]
     for child in children:
         amount.append(len(child))
@@ -141,7 +137,7 @@ def recurrentID3(array, arrayEntropy, columns): #rekurencyjne tworzenie drzewa d
             for j in range(len(tempArray)):
                 tempArray[j].pop(bestChoice)
             entropy = countEntropy(tempArray)
-            tree=Tree(bestChoice, children[i][0][bestChoice], recurrentID3(tempArray, entropy, len(tempArray[0])-1), None)
+            tree=Tree(bestChoice, children[i][0][bestChoice], recurrentID3(tempArray, entropy, columns-1), None)
             listOfSubtrees.append(tree)
         return listOfSubtrees
             
@@ -174,7 +170,7 @@ def accuracy(tree, testData):
 
 def build_tree(dataArray):
     columns = len(dataArray[0]) - 1  # liczba kolumn bez klasy
-    tree=recurrentID3(dataArray, countEntropy(dataArray), columns)
+    tree=recurrentID3(dataArray, count_entropy_or_gini(dataArray, CHOSEN_METHOD), columns)
     return tree
 
 if __name__ == "__main__":
@@ -183,4 +179,4 @@ if __name__ == "__main__":
     dataArray, testingData = divideData(initFile(DATAFILE))
     tree = build_tree(dataArray)
     acc = accuracy(tree, testingData)
-    print(f"Accuracy = {round(100*acc)}%")
+    print(f"Accuracy = {round(1000*acc)/10}%")
