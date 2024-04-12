@@ -113,7 +113,7 @@ def chooseBestPath(dataArray,dataEntropy,columns,ig_method="entropy"):      #wyb
         bestChoice=np.array(igList).argmax()+1
     return bestChoice
 
-def recurrentID3(array, arrayEntropy, columns): #rekurencyjne tworzenie drzewa decyzyjnego 
+def recurrentID3(array, arrayEntropy, columns):     #rekurencyjne tworzenie drzewa decyzyjnego 
     if len(array[0])==1:
         classValues=nameValues(array,0)
         if len(classValues)==1:
@@ -149,11 +149,11 @@ def predict(data, tree):        # wyliczenie predykcji dla danego wejścia
     tempArray=copy.deepcopy(data)
     tempArray.pop(choice)
     setOfOptions=[]
-    for i in range(len(tree)):
-        if tree[i].choiceValue==data[choice]:
-            result=predict(tempArray, tree[i].children)
+    for subtree in tree:
+        if subtree.choiceValue==data[choice]:
+            result=predict(tempArray, subtree.children)
             return result
-        setOfOptions.append(tree[i])
+        setOfOptions.append(subtree)
     result = predict(tempArray, np.random.choice(setOfOptions, 1)[0].children)
     return result
 
