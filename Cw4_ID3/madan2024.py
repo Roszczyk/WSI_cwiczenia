@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import copy
 
-from library import initFile
+from library import initFile, divideData
 
 METHODS_LIST = ["entropy", "gini"]
 CHOSEN_METHOD = METHODS_LIST[1]
@@ -27,17 +27,6 @@ def most_frequent(List): #wskazanie najczęstszego elementu w liście
             counter = curr_frequency
             current_best = i
     return current_best
-
-def divideData(data, train_prob = 0.8): #podział zbioru danych na dane trenujące i testowe
-    trainingData=[]
-    testingData=[]
-    for i in range(len(data)):
-        chooseSet=np.random.choice([0,1],1,p=[train_prob,1-train_prob])
-        if chooseSet==0:
-            trainingData.append(data[i])
-        if chooseSet==1:
-            testingData.append(data[i])
-    return trainingData, testingData
 
 def nameValues(data, checking):      #nazwanie klas danego atrybutu
     unique_list=[]
