@@ -6,7 +6,7 @@ import copy
 from library import initFile
 
 METHODS_LIST = ["entropy", "gini"]
-CHOSEN_METHOD = METHODS_LIST[0]
+CHOSEN_METHOD = METHODS_LIST[1]
 
 class Tree:
     def __init__(self, choice,choiceValue, children, Class=None):
@@ -72,17 +72,30 @@ def countEntropy(array):        #liczenie entropii względem danego atrybutu
             if array[j][0]==values[i]:
                 countTemp=countTemp+1
         count.append(countTemp)
-    sumValues=0
     entropy=0
-    for i in range(len(count)):
-        sumValues=sumValues+count[i]
-    for i in range(len(count)):
-        prob=count[i]/sumValues
+    sumValues = sum(count)
+    for i in count:
+        prob=i/sumValues
         entropy=entropy-prob*log2(prob)
     return entropy
 
-def countGini(array):
-    pass
+def countGini(array):              # liczenie wskaźnika Giniego względem danego atrybutu
+    values=nameValues(array,0)
+    count = []
+    for value in values:            #zliczanie ile jest przykładów danej klasy
+        countTemp=0
+        for attr in array:          
+            if attr[0] == value:
+                countTemp=countTemp+1
+        count.append(countTemp)
+    sumValues = sum(count)
+    gini = 1
+    for i in count:
+        prob = i / sumValues
+        gini = gini - prob ** 2
+    return gini
+
+
 
 def checkChildrenEntropy(array, checking, chosen_method = "entropy"):      #sprawdzenie entropii względem dzieci
     dividedArray=divideByChecked(array, checking)
@@ -140,7 +153,6 @@ def recurrentID3(array, arrayEntropy, columns):     #rekurencyjne tworzenie drze
             tree=Tree(bestChoice, children[i][0][bestChoice], recurrentID3(tempArray, entropy, columns-1), None)
             listOfSubtrees.append(tree)
         return listOfSubtrees
-            
     
 def predict(data, tree):        # wyliczenie predykcji dla danego wejścia
     if tree[0].Class != None:
